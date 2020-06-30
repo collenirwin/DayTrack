@@ -14,8 +14,6 @@ namespace DayTrack.Views
             new PageNavigationItem { Id = PageIdentifier.NewTracker, Title = "Create Tracker" },
         };
 
-        private ConductorPage Conductor => Application.Current.MainPage as ConductorPage;
-
         public MenuPage()
         {
             InitializeComponent();
@@ -26,7 +24,7 @@ namespace DayTrack.Views
             {
                 if (MenuListView.SelectedItem is PageNavigationItem navItem)
                 {
-                    Conductor.NavigateToPage(navItem.Id);
+                    App.Conductor.NavigateToPage(navItem.Id);
                 }
             };
         }

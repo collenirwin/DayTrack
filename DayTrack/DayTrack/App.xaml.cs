@@ -5,6 +5,8 @@ namespace DayTrack
 {
     public partial class App : Application
     {
+        public static ConductorPage Conductor => Current.MainPage as ConductorPage;
+
         public App()
         {
             InitializeComponent();

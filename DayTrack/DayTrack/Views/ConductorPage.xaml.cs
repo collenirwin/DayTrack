@@ -43,5 +43,15 @@ namespace DayTrack.Views
 
             IsPresented = false;
         }
+
+        public void NavigateToTrackerPage(string name)
+        {
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                Detail = new NavigationPage(new TrackerPage(name));
+            }
+
+            IsPresented = false;
+        }
     }
 }

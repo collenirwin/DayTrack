@@ -6,6 +6,8 @@
     public enum PageIdentifier
     {
         Home,
-        NewTracker
+        NewTracker,
+        Tracker,
+        About
     }
 }

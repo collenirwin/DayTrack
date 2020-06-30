@@ -4,14 +4,13 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="DayTrack.Views.NewTrackerPage"
-             Title="Create a new tracker">
+             x:Class="DayTrack.Views.TrackerPage">
     
     <ContentPage.Content>
-        <StackLayout VerticalOptions="StartAndExpand" Padding="10">
-            <Entry Text="{Binding Name}" Placeholder="Name of your new tracker" />
-            <Label IsVisible="{Binding HasError}" Text="{Binding ErrorMessage}" />
-            <Button Text="CREATE TRACKER" Command="{Binding CreateCommand}" />
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
