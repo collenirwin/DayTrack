@@ -23,6 +23,17 @@ namespace DayTrack.Views
         {
             InitializeComponent();
 
+            MessagingCenter.Subscribe<TrackerViewModel>(this, TrackerViewModel.AllTrackersPullFailedMessage,
+                async sender => await DisplayAlert(title: "Error",
+                    message: "Database operation failed. Please try again. " +
+                        "If the problem persists, the app's data may be corrupt.",
+                    cancel: "OK"));
+
+            MessagingCenter.Subscribe<TrackerViewModel>(this, nameof(TrackerViewModel.DeleteCommand),
+                async sender => await DisplayAlert(title: "Error",
+                    message: "Failed to delete the tracker.",
+                    cancel: "OK"));
+
             using (var scope = App.DependencyContainer.BeginLifetimeScope())
             {
                 BindingContext = _viewModel = scope.Resolve<TrackerViewModel>();
