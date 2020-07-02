@@ -1,7 +1,7 @@
 ﻿using DayTrack.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.IO;
-using Xamarin.Essentials;
 
 namespace DayTrack.Data
 {
@@ -11,12 +11,20 @@ namespace DayTrack.Data
     public class AppDbContext : DbContext
     {
         private const string _fileName = "app.db";
-        private readonly string _path = Path.Combine(FileSystem.AppDataDirectory, _fileName);
+        private readonly string _path = Path
+            .Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _fileName);
 
         public DbSet<Tracker> Trackers { get; set; }
         public DbSet<LoggedDay> LoggedDays { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseSqlite($"Data source={_path}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Tracker>()
+                .HasIndex(tracker => tracker.Name)
+                .IsUnique();
+        }
     }
 }

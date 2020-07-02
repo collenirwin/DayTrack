@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using Autofac;
+using DayTrack.Services;
+using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace DayTrack.ViewModels
@@ -8,6 +11,7 @@ namespace DayTrack.ViewModels
         private string _name = "";
         private string _errorMessage = "";
         private bool _hasError = false;
+        private readonly TrackerService _trackerService;
 
         public string Name
         {
@@ -33,12 +37,14 @@ namespace DayTrack.ViewModels
 
         public Command CreateCommand { get; }
 
-        public NewTrackerViewModel()
+        public NewTrackerViewModel(TrackerService trackerService)
         {
-            CreateCommand = new Command(Create);
+            _trackerService = trackerService;
+
+            CreateCommand = new Command(async () => await Create());
         }
 
-        private void Create()
+        private async Task Create()
         {
             string name = Name.Trim();
 
@@ -48,7 +54,13 @@ namespace DayTrack.ViewModels
                 return;
             }
 
-            // TODO: add an entry for this tracker in the db
+            bool successful = await _trackerService.TryAddTrackerAsync(name);
+
+            if (!successful)
+            {
+                ErrorMessage = "Failed to create the tracker. Please make sure the name is unique.";
+                return;
+            }
 
             // notify all listeners that this command has finished successfully with the name of the new tracker
             MessagingCenter.Send(this, nameof(CreateCommand), Name);
