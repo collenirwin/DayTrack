@@ -14,10 +14,10 @@ namespace DayTrack.Views
 
             using (var scope = App.DependencyContainer.BeginLifetimeScope())
             {
-                BindingContext = scope.Resolve<NewTrackerViewModel>();
+                BindingContext = scope.Resolve<TrackerViewModel>();
             }
 
-            MessagingCenter.Subscribe<NewTrackerViewModel, string>(this, nameof(NewTrackerViewModel.CreateCommand),
+            MessagingCenter.Subscribe<TrackerViewModel, string>(this, nameof(TrackerViewModel.CreateCommand),
                 (sender, name) => App.Conductor.NavigateToTrackerPage(name));
         }
     }

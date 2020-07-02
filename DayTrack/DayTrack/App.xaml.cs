@@ -17,12 +17,6 @@ namespace DayTrack
         public App()
         {
             InitializeComponent();
-            MainPage = new ConductorPage();
-        }
-
-        protected override void OnStart()
-        {
-            base.OnStart();
 
             var builder = new ContainerBuilder();
 
@@ -36,9 +30,10 @@ namespace DayTrack
             builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
             builder.RegisterInstance(context).SingleInstance();
             builder.RegisterType<TrackerService>().SingleInstance();
-            builder.RegisterType<NewTrackerViewModel>().SingleInstance();
+            builder.RegisterType<TrackerViewModel>().SingleInstance();
 
             DependencyContainer = builder.Build();
+            MainPage = new ConductorPage();
         }
     }
 }
