@@ -41,5 +41,16 @@ namespace DayTrack.Services
         public async Task<IEnumerable<Tracker>> TryGetAllTrackersAsync() =>
             await Try.RunAsync(GetAllTrackersAsync,
                 ex => _logger.Error(ex, "Failed to get all trackers."));
+
+        public async Task DeleteTrackerAsync(int id)
+        {
+            var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
+            _context.Trackers.Remove(tracker);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> TryDeleteTrackerAsync(int id) =>
+            await Try.RunAsync(async () => await DeleteTrackerAsync(id),
+                ex => _logger.Error(ex, $"Failed to delete tracker with id {id}."));
     }
 }

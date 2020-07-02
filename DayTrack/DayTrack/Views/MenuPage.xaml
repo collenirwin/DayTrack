@@ -8,17 +8,26 @@
              Title="Menu">
 
     <StackLayout VerticalOptions="Fill">
-        <ListView x:Name="MenuListView">
+        <ListView x:Name="MenuListView" VerticalOptions="Start">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Title}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ListView x:Name="TrackersListView" ItemsSource="{Binding AllTrackers}">
+        <ListView x:Name="TrackersListView"
+                  ItemsSource="{Binding AllTrackers}"
+                  VerticalOptions="StartAndExpand">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" />
+                    <TextCell Text="{Binding Name}">
+                        <TextCell.ContextActions>
+                            <MenuItem Text="DELETE"
+                                      Clicked="OnTrackerDelete"
+                                      CommandParameter="{Binding .}"
+                                      IsDestructive="True" />
+                        </TextCell.ContextActions>
+                    </TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

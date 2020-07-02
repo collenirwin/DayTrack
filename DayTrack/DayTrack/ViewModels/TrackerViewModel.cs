@@ -40,12 +40,14 @@ namespace DayTrack.ViewModels
 
         public ObservableCollection<Tracker> AllTrackers { get; } = new ObservableCollection<Tracker>();
         public Command CreateCommand { get; }
+        public Command DeleteCommand { get; }
 
         public TrackerViewModel(TrackerService trackerService)
         {
             _trackerService = trackerService;
 
             CreateCommand = new Command(async () => await Create());
+            DeleteCommand = new Command(async tracker => await Delete((Tracker)tracker));
             _ = PopulateAllTrackers();
         }
 
@@ -72,6 +74,19 @@ namespace DayTrack.ViewModels
             // notify all listeners that this command has finished successfully with the name of the new tracker
             MessagingCenter.Send(this, nameof(CreateCommand), Name);
             ResetAllValues();
+        }
+
+        private async Task Delete(Tracker tracker)
+        {
+            bool successful = await _trackerService.TryDeleteTrackerAsync(tracker.Id);
+
+            if (!successful)
+            {
+                MessagingCenter.Send(this, nameof(DeleteCommand));
+                return;
+            }
+
+            await PopulateAllTrackers();
         }
 
         private async Task PopulateAllTrackers()
