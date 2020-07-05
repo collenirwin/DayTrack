@@ -10,7 +10,7 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="StartAndExpand" Padding="10">
             <Entry Text="{Binding Name}" Placeholder="Name of your new tracker" />
-            <Label IsVisible="{Binding HasError}" Text="{Binding ErrorMessage}" />
+            <Label IsVisible="{Binding HasError}" Text="{Binding ErrorMessage}" Padding="5" TextColor="LightCoral" />
             <Button Text="CREATE TRACKER" Command="{Binding CreateCommand}" />
         </StackLayout>
     </ContentPage.Content>
