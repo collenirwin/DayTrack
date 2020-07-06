@@ -31,6 +31,12 @@ namespace DayTrack.Views
                     case PageIdentifier.NewTracker:
                         _pages.Add(pageId, new NavigationPage(new NewTrackerPage()));
                         break;
+                    case PageIdentifier.About:
+                        _pages.Add(pageId, new NavigationPage(new AboutPage()));
+                        break;
+                    case PageIdentifier.Settings:
+                        _pages.Add(pageId, new NavigationPage(new SettingsPage()));
+                        break;
                 }
             }
 
