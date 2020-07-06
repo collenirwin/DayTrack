@@ -8,6 +8,7 @@
         Home,
         NewTracker,
         Tracker,
-        About
+        About,
+        Settings
     }
 }
