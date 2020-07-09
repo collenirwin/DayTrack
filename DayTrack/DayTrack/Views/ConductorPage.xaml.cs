@@ -23,7 +23,7 @@ namespace DayTrack.Views
             MasterBehavior = MasterBehavior.Popover;
         }
 
-        public void NavigateToPage(PageIdentifier pageId)
+        public void NavigateToPage(PageIdentifier pageId, bool keepMenuOpen = false)
         {
             if (!_pages.ContainsKey(pageId))
             {
@@ -48,7 +48,7 @@ namespace DayTrack.Views
                 Detail = newPage;
             }
 
-            IsPresented = false;
+            IsPresented = keepMenuOpen;
         }
 
         public void NavigateToTrackerLogPage(Tracker tracker)

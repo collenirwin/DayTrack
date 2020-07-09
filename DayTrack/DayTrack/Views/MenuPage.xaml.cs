@@ -2,6 +2,7 @@
 using DayTrack.Models;
 using DayTrack.Utils;
 using DayTrack.ViewModels;
+using DayTrack.Views.Models;
 using System;
 using System.ComponentModel;
 using Xamarin.Forms;
@@ -41,6 +42,7 @@ namespace DayTrack.Views
 
             if (shouldDelete)
             {
+                App.Conductor.NavigateToPage(PageIdentifier.Home, keepMenuOpen: true);
                 _viewModel.DeleteCommand.Execute((sender as MenuItem).CommandParameter);
             }
         }
