@@ -9,7 +9,7 @@
              Title="Menu">
 
     <StackLayout VerticalOptions="Fill">
-        <Label Text="Trackers" Margin="10" FontSize="Title" />
+        <Label Text="Trackers" Margin="10, 10, 0, 0" FontSize="Medium" />
 
         <ListView x:Name="TrackersListView" ItemsSource="{Binding AllTrackers}" ItemSelected="OnTrackerSelected">
             <ListView.ItemTemplate>
@@ -19,6 +19,7 @@
                             <MenuItem Text="EDIT"
                                       Clicked="OnTrackerEdit"
                                       CommandParameter="{Binding .}" />
+                            
                             <MenuItem Text="DELETE"
                                       Clicked="OnTrackerDelete"
                                       CommandParameter="{Binding .}"
@@ -29,6 +30,6 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <views:NavButtons HeightRequest="70" Margin="10" />
+        <views:NavButtons HeightRequest="50" Margin="10" />
     </StackLayout>
 </ContentPage>
