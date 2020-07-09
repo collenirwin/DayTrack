@@ -21,15 +21,17 @@ namespace DayTrack.Services
             _logger = logger;
         }
 
-        public async Task AddTrackerAsync(string name)
+        public async Task<Tracker> AddTrackerAsync(string name)
         {
             name = name ?? throw new ArgumentNullException(nameof(name));
 
-            _context.Trackers.Add(new Tracker { Name = name });
+            var tracker = new Tracker { Name = name };
+            _context.Trackers.Add(tracker);
             await _context.SaveChangesAsync();
+            return tracker;
         }
 
-        public async Task<bool> TryAddTrackerAsync(string name) =>
+        public async Task<Tracker> TryAddTrackerAsync(string name) =>
             await Try.RunAsync(async () => await AddTrackerAsync(name),
                 ex => _logger.Error(ex, $"Failed to add tracker with name {name}."));
 
@@ -53,14 +55,15 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await DeleteTrackerAsync(id),
                 ex => _logger.Error(ex, $"Failed to delete tracker with id {id}."));
 
-        public async Task UpdateTrackerNameAsync(int id, string name)
+        public async Task<Tracker> UpdateTrackerNameAsync(int id, string name)
         {
             var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
             tracker.Name = name;
             await _context.SaveChangesAsync();
+            return tracker;
         }
 
-        public async Task<bool> TryUpdateTrackerNameAsync(int id, string name) =>
+        public async Task<Tracker> TryUpdateTrackerNameAsync(int id, string name) =>
             await Try.RunAsync(async () => await UpdateTrackerNameAsync(id, name),
                 ex => _logger.Error(ex, $"Failed to update tracker with id {id}'s name to {name}."));
     }

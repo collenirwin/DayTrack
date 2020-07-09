@@ -22,8 +22,8 @@ namespace DayTrack.Views
             viewModel.Id = tracker.Id;
             viewModel.Name = tracker.Name;
 
-            MessagingCenter.Subscribe<TrackerViewModel, string>(this, nameof(TrackerViewModel.UpdateCommand),
-                (sender, name) => App.Conductor.NavigateToTrackerPage(name));
+            MessagingCenter.Subscribe<TrackerViewModel, Tracker>(this, nameof(TrackerViewModel.UpdateCommand),
+                (sender, tracker) => App.Conductor.NavigateToTrackerLogPage(tracker));
         }
     }
 }

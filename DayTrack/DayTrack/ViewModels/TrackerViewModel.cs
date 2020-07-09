@@ -70,18 +70,16 @@ namespace DayTrack.ViewModels
                 return;
             }
 
-            bool successful = await _trackerService.TryAddTrackerAsync(name);
+            var tracker = await _trackerService.TryAddTrackerAsync(name);
 
-            if (!successful)
+            if (tracker == null)
             {
                 ErrorMessage = "Failed to create the tracker. Please make sure the name is unique.";
                 return;
             }
 
             await PopulateAllTrackersAsync();
-
-            // notify all listeners that this command has finished successfully with the name of the new tracker
-            MessagingCenter.Send(this, nameof(CreateCommand), Name);
+            MessagingCenter.Send(this, nameof(CreateCommand), tracker);
             ResetAllValues();
         }
 
@@ -95,16 +93,16 @@ namespace DayTrack.ViewModels
                 return;
             }
 
-            bool successful = await _trackerService.TryUpdateTrackerNameAsync(Id, name);
+            var tracker = await _trackerService.TryUpdateTrackerNameAsync(Id, name);
 
-            if (!successful)
+            if (tracker == null)
             {
                 ErrorMessage = "Failed to update the tracker. Please make sure the name is unique.";
                 return;
             }
 
             await PopulateAllTrackersAsync();
-            MessagingCenter.Send(this, nameof(UpdateCommand), Name);
+            MessagingCenter.Send(this, nameof(UpdateCommand), tracker);
             ResetAllValues();
         }
 

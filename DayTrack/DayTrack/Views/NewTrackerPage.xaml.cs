@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using DayTrack.Models;
 using DayTrack.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,8 +18,8 @@ namespace DayTrack.Views
                 BindingContext = scope.Resolve<TrackerViewModel>();
             }
 
-            MessagingCenter.Subscribe<TrackerViewModel, string>(this, nameof(TrackerViewModel.CreateCommand),
-                (sender, name) => App.Conductor.NavigateToTrackerPage(name));
+            MessagingCenter.Subscribe<TrackerViewModel, Tracker>(this, nameof(TrackerViewModel.CreateCommand),
+                (sender, tracker) => App.Conductor.NavigateToTrackerLogPage(tracker));
         }
     }
 }

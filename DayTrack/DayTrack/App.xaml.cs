@@ -30,6 +30,7 @@ namespace DayTrack
             builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
             builder.RegisterInstance(context).SingleInstance();
             builder.RegisterType<TrackerService>().SingleInstance();
+            builder.RegisterType<TrackerLogService>().SingleInstance();
             builder.RegisterType<TrackerViewModel>().SingleInstance();
 
             DependencyContainer = builder.Build();

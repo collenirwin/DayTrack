@@ -34,6 +34,9 @@
     <Compile Update="Views\NewTrackerPage.xaml.cs">
       <DependentUpon>NewTrackerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\TrackerLogPage.xaml.cs">
+      <DependentUpon>TrackerLogPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -55,7 +58,7 @@
     <EmbeddedResource Update="Views\SettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\TrackerPage.xaml">
+    <EmbeddedResource Update="Views\TrackerLogPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

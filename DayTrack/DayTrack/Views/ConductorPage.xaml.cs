@@ -51,11 +51,11 @@ namespace DayTrack.Views
             IsPresented = false;
         }
 
-        public void NavigateToTrackerPage(string name)
+        public void NavigateToTrackerLogPage(Tracker tracker)
         {
-            if (!string.IsNullOrWhiteSpace(name))
+            if (tracker != null)
             {
-                Detail = new NavigationPage(new TrackerPage(name));
+                Detail = new NavigationPage(new TrackerLogPage(tracker));
             }
 
             IsPresented = false;
