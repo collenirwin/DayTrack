@@ -20,7 +20,9 @@ namespace DayTrack.Views
             Title = tracker.Name;
 
             using var scope = App.DependencyContainer.BeginLifetimeScope();
-            BindingContext = new TrackerLogViewModel(tracker, scope.Resolve<TrackerLogService>());
+            BindingContext = new TrackerLogViewModel(tracker,
+                logService: scope.Resolve<TrackerLogService>(),
+                populateGroups: true);
         }
     }
 }

@@ -45,5 +45,21 @@ namespace DayTrack.Services
         public async Task<IEnumerable<LoggedDay>> TryGetAllLoggedDaysAsync(int trackerId) =>
             await Try.RunAsync(async () => await GetAllLoggedDaysAsync(trackerId),
                 ex => _logger.Error(ex, $"Failed to get all logged days for tracker id {trackerId}."));
+
+        public async Task<IEnumerable<LoggedDayGroup>> GetAllLoggedDayGroupsAsync(int trackerId) =>
+            await _context.LoggedDays
+                .Where(day => day.TrackerId == trackerId)
+                .GroupBy(day => day.Date,
+                    (day, group) => new LoggedDayGroup
+                    {
+                        Date = day,
+                        Count = group.Count()
+                    })
+                .OrderByDescending(group => group.Date)
+                .ToListAsync();
+
+        public async Task<IEnumerable<LoggedDayGroup>> TryGetAllLoggedDayGroupsAsync(int trackerId) =>
+            await Try.RunAsync(async () => await GetAllLoggedDayGroupsAsync(trackerId),
+                ex => _logger.Error(ex, $"Failed to get all logged day groups for tracker id {trackerId}."));
     }
 }

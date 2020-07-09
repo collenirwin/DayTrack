@@ -23,15 +23,24 @@ namespace DayTrack.ViewModels
         }
 
         public ObservableCollection<LoggedDay> AllDays { get; } = new ObservableCollection<LoggedDay>();
+        public ObservableCollection<LoggedDayGroup> AllDayGroups { get; } = new ObservableCollection<LoggedDayGroup>();
         public ICommand LogDayCommand { get; }
 
-        public TrackerLogViewModel(Tracker tracker, TrackerLogService logService)
+        public TrackerLogViewModel(Tracker tracker, TrackerLogService logService, bool populateGroups)
         {
             _tracker = tracker;
             _logService = logService;
 
             LogDayCommand = new Command(async () => await LogDayAsync());
-            _ = PopulateAllDaysAsync();
+
+            if (populateGroups)
+            {
+                _ = PopulateAllDayGroupsAsync();
+            }
+            else
+            {
+                _ = PopulateAllDaysAsync();
+            }
         }
 
         private async Task LogDayAsync()
@@ -44,7 +53,7 @@ namespace DayTrack.ViewModels
                 return;
             }
 
-            await PopulateAllDaysAsync();
+            await PopulateAllDayGroupsAsync();
         }
 
         private async Task PopulateAllDaysAsync()
@@ -61,6 +70,23 @@ namespace DayTrack.ViewModels
             foreach (var day in allDays)
             {
                 AllDays.Add(day);
+            }
+        }
+
+        private async Task PopulateAllDayGroupsAsync()
+        {
+            var allDayGroups = await _logService.TryGetAllLoggedDayGroupsAsync(_tracker.Id);
+
+            if (allDayGroups == null)
+            {
+                MessagingCenter.Send(this, DatabaseErrorMessage);
+                return;
+            }
+
+            AllDayGroups.Clear();
+            foreach (var group in allDayGroups)
+            {
+                AllDayGroups.Add(group);
             }
         }
     }
