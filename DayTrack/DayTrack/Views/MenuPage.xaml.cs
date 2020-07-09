@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using DayTrack.Models;
 using DayTrack.ViewModels;
 using System;
 using System.ComponentModel;
@@ -42,5 +43,8 @@ namespace DayTrack.Views
                 _viewModel.DeleteCommand.Execute((sender as MenuItem).CommandParameter);
             }
         }
+
+        private void OnTrackerEdit(object sender, EventArgs e) =>
+            App.Conductor.NavigateToEditTrackerPage((sender as MenuItem).CommandParameter as Tracker);
     }
 }

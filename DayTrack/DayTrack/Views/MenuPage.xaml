@@ -15,6 +15,9 @@
                 <DataTemplate>
                     <TextCell Text="{Binding Name}">
                         <TextCell.ContextActions>
+                            <MenuItem Text="EDIT"
+                                      Clicked="OnTrackerEdit"
+                                      CommandParameter="{Binding .}" />
                             <MenuItem Text="DELETE"
                                       Clicked="OnTrackerDelete"
                                       CommandParameter="{Binding .}"

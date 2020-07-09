@@ -52,5 +52,16 @@ namespace DayTrack.Services
         public async Task<bool> TryDeleteTrackerAsync(int id) =>
             await Try.RunAsync(async () => await DeleteTrackerAsync(id),
                 ex => _logger.Error(ex, $"Failed to delete tracker with id {id}."));
+
+        public async Task UpdateTrackerNameAsync(int id, string name)
+        {
+            var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
+            tracker.Name = name;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> TryUpdateTrackerNameAsync(int id, string name) =>
+            await Try.RunAsync(async () => await UpdateTrackerNameAsync(id, name),
+                ex => _logger.Error(ex, $"Failed to update tracker with id {id}'s name to {name}."));
     }
 }

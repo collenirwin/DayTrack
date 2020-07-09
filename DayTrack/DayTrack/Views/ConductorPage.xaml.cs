@@ -1,4 +1,5 @@
-﻿using DayTrack.Views.Models;
+﻿using DayTrack.Models;
+using DayTrack.Views.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Xamarin.Forms;
@@ -55,6 +56,16 @@ namespace DayTrack.Views
             if (!string.IsNullOrWhiteSpace(name))
             {
                 Detail = new NavigationPage(new TrackerPage(name));
+            }
+
+            IsPresented = false;
+        }
+
+        public void NavigateToEditTrackerPage(Tracker tracker)
+        {
+            if (tracker != null)
+            {
+                Detail = new NavigationPage(new EditTrackerPage(tracker));
             }
 
             IsPresented = false;
