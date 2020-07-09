@@ -5,6 +5,7 @@ using DayTrack.ViewModels;
 using DayTrack.Views;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace DayTrack
@@ -17,6 +18,7 @@ namespace DayTrack
         public App()
         {
             InitializeComponent();
+            VersionTracking.Track();
 
             var builder = new ContainerBuilder();
 

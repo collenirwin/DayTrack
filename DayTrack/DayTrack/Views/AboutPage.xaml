@@ -8,10 +8,27 @@
              Title="About">
     
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="About"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Text="App Name" />
+                <Label Grid.Row="0" Grid.Column="1" Text="Day Tracker" />
+
+                <Label Grid.Row="1" Grid.Column="0" Text="Version" />
+                <Label Grid.Row="1" Grid.Column="1" Text="{Binding VersionNumber}" />
+
+                <Label Grid.Row="2" Grid.Column="0" Text="Author" />
+                <Label Grid.Row="2" Grid.Column="1" Text="Collen Irwin" />
+
+                <Label Grid.Row="3" Grid.Column="0" Text="License" />
+                <Label Grid.Row="3" Grid.Column="1" Text="M.I.T." />
+            </Grid>
+
+            <Button Text="VIEW SOURCE ON GitHub" Clicked="OnGitHubLinkClick" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
