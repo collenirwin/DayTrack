@@ -47,7 +47,13 @@ namespace DayTrack.Views
         private void OnTrackerEdit(object sender, EventArgs e) =>
             App.Conductor.NavigateToEditTrackerPage((sender as MenuItem).CommandParameter as Tracker);
 
-        private void OnTrackerSelected(object sender, SelectedItemChangedEventArgs e) =>
-            App.Conductor.NavigateToTrackerLogPage(e.SelectedItem as Tracker);
+        private void OnTrackerSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem is Tracker tracker)
+            {
+                App.Conductor.NavigateToTrackerLogPage(tracker);
+                TrackersListView.SelectedItem = null;
+            }
+        }
     }
 }
