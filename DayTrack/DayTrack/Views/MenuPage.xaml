@@ -8,8 +8,8 @@
              x:Class="DayTrack.Views.MenuPage"
              Title="Menu">
 
-    <StackLayout VerticalOptions="Fill">
-        <Label Text="Trackers" Margin="10, 10, 0, 0" FontSize="Medium" />
+    <StackLayout VerticalOptions="Fill" Margin="10">
+        <Label Text="Trackers" FontSize="Medium" />
 
         <ListView x:Name="TrackersListView" ItemsSource="{Binding AllTrackers}" ItemSelected="OnTrackerSelected">
             <ListView.ItemTemplate>
@@ -30,6 +30,6 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <views:NavButtons HeightRequest="50" Margin="10" />
+        <views:NavButtons HeightRequest="50" Margin="0, 10, 0, 0" />
     </StackLayout>
 </ContentPage>
