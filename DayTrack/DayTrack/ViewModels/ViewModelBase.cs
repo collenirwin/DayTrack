@@ -9,10 +9,21 @@ namespace DayTrack.ViewModels
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
+        private bool _isLoading = false;
+
         /// <summary>
         /// The event fired upon a property change.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Is this view model in a loading state?
+        /// </summary>
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetAndRaiseIfChanged(ref _isLoading, value);
+        }
 
         /// <summary>
         /// Raises the <see cref="PropertyChanged"/> event with the given property name.

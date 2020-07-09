@@ -1,5 +1,6 @@
 ﻿using DayTrack.Models;
 using DayTrack.Services;
+using DayTrack.Utils;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -34,10 +35,11 @@ namespace DayTrack.ViewModels
             _tracker = tracker;
             _logService = logService;
 
-            LogDayCommand = new Command(async () => await LogDayAsync());
-            DeleteLoggedDayCommand = new Command(async day => await DeleteLoggedDayAsync(day as LoggedDay));
-            PullAllDaysCommand = new Command(async () => await PopulateAllDaysAsync());
-            PullAllDayGroupsCommand = new Command(async () => await PopulateAllDayGroupsAsync());
+            LogDayCommand = new Command(async () => await LogDayAsync().ExpressLoading(this));
+            DeleteLoggedDayCommand = new Command(async day =>
+                await DeleteLoggedDayAsync(day as LoggedDay).ExpressLoading(this));
+            PullAllDaysCommand = new Command(async () => await PopulateAllDaysAsync().ExpressLoading(this));
+            PullAllDayGroupsCommand = new Command(async () => await PopulateAllDayGroupsAsync().ExpressLoading(this));
         }
 
         private async Task LogDayAsync()

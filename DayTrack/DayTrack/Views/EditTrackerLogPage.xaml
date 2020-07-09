@@ -10,7 +10,12 @@
 
     <ContentPage.Content>
         <StackLayout Margin="10">
-            <ListView ItemsSource="{Binding AllDays}" HasUnevenRows="True">
+            <ListView ItemsSource="{Binding AllDays}"
+                      HasUnevenRows="True"
+                      SelectionMode="None"
+                      IsPullToRefreshEnabled="True"
+                      RefreshCommand="{Binding PullAllDaysCommand}"
+                      IsRefreshing="{Binding IsLoading}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
