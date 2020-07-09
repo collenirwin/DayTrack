@@ -26,7 +26,6 @@ namespace DayTrack.Utils
             {
                 viewModel.IsLoading = true;
                 await task;
-                
             }
             finally
             {

@@ -1,4 +1,6 @@
-﻿using Xamarin.Forms;
+﻿using DayTrack.Views.Models;
+using System;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace DayTrack.Views
@@ -10,5 +12,11 @@ namespace DayTrack.Views
         {
             InitializeComponent();
         }
+
+        private void OnNewTrackerClick(object sender, EventArgs e) =>
+            App.Conductor.NavigateToPage(PageIdentifier.NewTracker);
+
+        private void OnViewTrackersClick(object sender, EventArgs e) =>
+            App.Conductor.IsPresented = true;
     }
 }

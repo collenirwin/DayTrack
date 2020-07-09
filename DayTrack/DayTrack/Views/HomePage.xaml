@@ -8,10 +8,15 @@
              Title="Day Tracker">
     
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Margin="10">
+            <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <Image Source="home.png" HeightRequest="128" VerticalOptions="Center" HorizontalOptions="Center" />
+            </Grid>
+            
+            <StackLayout VerticalOptions="End">
+                <Button Text="CREATE A NEW TRACKER" Clicked="OnNewTrackerClick" />
+                <Button Text="VIEW EXISTING TRACKERS" Clicked="OnViewTrackersClick" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
