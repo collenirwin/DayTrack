@@ -3,6 +3,7 @@ using DayTrack.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace DayTrack.ViewModels
@@ -46,9 +47,9 @@ namespace DayTrack.ViewModels
         }
 
         public ObservableCollection<Tracker> AllTrackers { get; } = new ObservableCollection<Tracker>();
-        public Command CreateCommand { get; }
-        public Command UpdateCommand { get; }
-        public Command DeleteCommand { get; }
+        public ICommand CreateCommand { get; }
+        public ICommand UpdateCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         public TrackerViewModel(TrackerService trackerService)
         {

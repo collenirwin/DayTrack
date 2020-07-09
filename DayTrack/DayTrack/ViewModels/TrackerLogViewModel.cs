@@ -3,6 +3,7 @@ using DayTrack.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace DayTrack.ViewModels
@@ -22,7 +23,7 @@ namespace DayTrack.ViewModels
         }
 
         public ObservableCollection<LoggedDay> AllDays { get; } = new ObservableCollection<LoggedDay>();
-        public Command LogDayCommand { get; }
+        public ICommand LogDayCommand { get; }
 
         public TrackerLogViewModel(Tracker tracker, TrackerLogService logService)
         {
