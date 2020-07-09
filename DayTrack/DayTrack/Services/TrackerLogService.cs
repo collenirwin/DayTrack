@@ -12,6 +12,13 @@ namespace DayTrack.Services
 {
     public class TrackerLogService
     {
+        public enum GroupSortOption
+        {
+            DateDescending,
+            DateAscending,
+            CountDescending
+        }
+
         private readonly AppDbContext _context;
         private readonly ILogger _logger;
 
@@ -57,20 +64,37 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await GetAllLoggedDaysAsync(trackerId),
                 ex => _logger.Error(ex, $"Failed to get all logged days for tracker id {trackerId}."));
 
-        public async Task<IEnumerable<LoggedDayGroup>> GetAllLoggedDayGroupsAsync(int trackerId) =>
-            await _context.LoggedDays
+        public async Task<IEnumerable<LoggedDayGroup>> GetAllLoggedDayGroupsAsync(int trackerId,
+            GroupSortOption sortOption)
+        {
+            var query = _context.LoggedDays
                 .Where(day => day.TrackerId == trackerId)
                 .GroupBy(day => day.Date,
                     (day, group) => new LoggedDayGroup
                     {
                         Date = day,
                         Count = group.Count()
-                    })
-                .OrderByDescending(group => group.Date)
-                .ToListAsync();
+                    });
 
-        public async Task<IEnumerable<LoggedDayGroup>> TryGetAllLoggedDayGroupsAsync(int trackerId) =>
-            await Try.RunAsync(async () => await GetAllLoggedDayGroupsAsync(trackerId),
-                ex => _logger.Error(ex, $"Failed to get all logged day groups for tracker id {trackerId}."));
+            switch (sortOption)
+            {
+                case GroupSortOption.DateDescending:
+                    query = query.OrderByDescending(group => group.Date);
+                    break;
+                case GroupSortOption.DateAscending:
+                    query = query.OrderBy(group => group.Date);
+                    break;
+                case GroupSortOption.CountDescending:
+                    query = query.OrderByDescending(group => group.Count);
+                    break;
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<LoggedDayGroup>> TryGetAllLoggedDayGroupsAsync(int trackerId,
+            GroupSortOption sortOption) =>
+                await Try.RunAsync(async () => await GetAllLoggedDayGroupsAsync(trackerId, sortOption),
+                    ex => _logger.Error(ex, $"Failed to get all logged day groups for tracker id {trackerId}."));
     }
 }

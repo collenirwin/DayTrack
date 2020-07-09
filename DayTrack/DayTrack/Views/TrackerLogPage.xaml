@@ -15,6 +15,24 @@
         <StackLayout Margin="10, 10, 10, 0">
             <DatePicker Date="{Binding DateToLog}" />
             <Button Text="LOG" Command="{Binding LogDayCommand}" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Text="Sort by" FontSize="Medium" VerticalOptions="Center" />
+                <Picker x:Name="SortOptionPicker" Grid.Column="1">
+                    <Picker.Items>
+                        <x:String>Date (newest)</x:String>
+                        <x:String>Date (oldest)</x:String>
+                        <x:String>Count per day</x:String>
+                    </Picker.Items>
+                </Picker>
+            </Grid>
 
             <ListView ItemsSource="{Binding AllDayGroups}"
                       SelectionMode="None"

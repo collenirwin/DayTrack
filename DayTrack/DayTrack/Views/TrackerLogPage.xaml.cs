@@ -34,6 +34,9 @@ namespace DayTrack.Views
             using var scope = App.DependencyContainer.BeginLifetimeScope();
             BindingContext = _viewModel =
                 new TrackerLogViewModel(tracker, logService: scope.Resolve<TrackerLogService>());
+
+            SortOptionPicker.SelectedIndex = 0;
+            SortOptionPicker.SelectedIndexChanged += OnSortChange;
         }
 
         private async void OnEditEntries(object sender, EventArgs e) =>
@@ -41,5 +44,14 @@ namespace DayTrack.Views
 
         private async void OnAppearing(object sender, EventArgs e) =>
             await Task.Run(() => _viewModel.PullAllDayGroupsCommand.Execute(null));
+
+        private async void OnSortChange(object sender, EventArgs e)
+        {
+            if (SortOptionPicker.SelectedIndex != -1)
+            {
+                _viewModel.SortOptionIndex = SortOptionPicker.SelectedIndex;
+                await Task.Run(() => _viewModel.PullAllDayGroupsCommand.Execute(null));
+            }
+        }
     }
 }

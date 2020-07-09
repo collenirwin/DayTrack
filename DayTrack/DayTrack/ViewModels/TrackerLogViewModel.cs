@@ -12,6 +12,7 @@ namespace DayTrack.ViewModels
     public class TrackerLogViewModel : ViewModelBase
     {
         private DateTime _dateToLog = DateTime.Now.Date;
+        private TrackerLogService.GroupSortOption _sortOption = TrackerLogService.GroupSortOption.DateDescending;
         private readonly Tracker _tracker;
         private readonly TrackerLogService _logService;
 
@@ -21,6 +22,12 @@ namespace DayTrack.ViewModels
         {
             get => _dateToLog;
             set => SetAndRaiseIfChanged(ref _dateToLog, value);
+        }
+
+        public int SortOptionIndex
+        {
+            get => (int)_sortOption;
+            set => SetAndRaiseIfChanged(ref _sortOption, (TrackerLogService.GroupSortOption)value);
         }
 
         public ObservableCollection<LoggedDay> AllDays { get; } = new ObservableCollection<LoggedDay>();
@@ -87,7 +94,7 @@ namespace DayTrack.ViewModels
 
         private async Task PopulateAllDayGroupsAsync()
         {
-            var allDayGroups = await _logService.TryGetAllLoggedDayGroupsAsync(_tracker.Id);
+            var allDayGroups = await _logService.TryGetAllLoggedDayGroupsAsync(_tracker.Id, _sortOption);
 
             if (allDayGroups == null)
             {
