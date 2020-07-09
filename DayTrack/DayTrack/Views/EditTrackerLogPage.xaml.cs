@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using DayTrack.Models;
 using DayTrack.Services;
+using DayTrack.Utils;
 using DayTrack.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -17,6 +18,12 @@ namespace DayTrack.Views
         public EditTrackerLogPage()
         {
             InitializeComponent();
+
+            MessagingCenter.Subscribe<TrackerLogViewModel, LoggedDay>(this,
+                nameof(TrackerLogViewModel.DeleteLoggedDayCommand),
+                (sender, day) => this.DisplayAlertOnMain(title: "Error",
+                    message: $"Failed to delete entry for {day.Date.ToShortDateString()}.",
+                    cancel: "OK"));
         }
 
         public EditTrackerLogPage(Tracker tracker) : this()

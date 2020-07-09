@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using DayTrack.Models;
 using DayTrack.Services;
+using DayTrack.Utils;
 using DayTrack.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -18,6 +19,11 @@ namespace DayTrack.Views
         public TrackerLogPage()
         {
             InitializeComponent();
+
+            MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
+               sender => this.DisplayAlertOnMain(title: "Error",
+                   message: "A database error has occured.",
+                   cancel: "OK"));
         }
 
         public TrackerLogPage(Tracker tracker) : this()

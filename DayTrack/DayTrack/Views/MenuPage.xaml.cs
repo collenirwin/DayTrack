@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using DayTrack.Models;
+using DayTrack.Utils;
 using DayTrack.ViewModels;
 using System;
 using System.ComponentModel;
@@ -17,13 +18,13 @@ namespace DayTrack.Views
             InitializeComponent();
 
             MessagingCenter.Subscribe<TrackerViewModel>(this, TrackerViewModel.AllTrackersPullFailedMessage,
-                async sender => await DisplayAlert(title: "Error",
+                sender => this.DisplayAlertOnMain(title: "Error",
                     message: "Database operation failed. Please try again. " +
                         "If the problem persists, the app's data may be corrupt.",
                     cancel: "OK"));
 
             MessagingCenter.Subscribe<TrackerViewModel>(this, nameof(TrackerViewModel.DeleteCommand),
-                async sender => await DisplayAlert(title: "Error",
+                sender => this.DisplayAlertOnMain(title: "Error",
                     message: "Failed to delete the tracker.",
                     cancel: "OK"));
 

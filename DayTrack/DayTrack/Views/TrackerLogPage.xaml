@@ -16,7 +16,7 @@
             <DatePicker Date="{Binding DateToLog}" />
             <Button Text="LOG" Command="{Binding LogDayCommand}" />
 
-            <ListView ItemsSource="{Binding AllDayGroups}">
+            <ListView ItemsSource="{Binding AllDayGroups}" SelectionMode="None">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
