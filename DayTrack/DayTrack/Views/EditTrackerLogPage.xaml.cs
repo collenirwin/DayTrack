@@ -10,30 +10,25 @@ using Xamarin.Forms.Xaml;
 namespace DayTrack.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TrackerLogPage : ContentPage
+    public partial class EditTrackerLogPage : ContentPage
     {
-        private readonly Tracker _tracker;
         private readonly TrackerLogViewModel _viewModel;
 
-        public TrackerLogPage()
+        public EditTrackerLogPage()
         {
             InitializeComponent();
         }
 
-        public TrackerLogPage(Tracker tracker) : this()
+        public EditTrackerLogPage(Tracker tracker) : this()
         {
-            _tracker = tracker;
-            Title = tracker.Name;
+            Title = $"Editing {tracker.Name}";
 
             using var scope = App.DependencyContainer.BeginLifetimeScope();
             BindingContext = _viewModel =
                 new TrackerLogViewModel(tracker, logService: scope.Resolve<TrackerLogService>());
         }
 
-        private async void OnEditEntries(object sender, EventArgs e) =>
-            await App.Conductor.Detail.Navigation.PushAsync(new EditTrackerLogPage(_tracker));
-
         private async void OnAppearing(object sender, EventArgs e) =>
-            await Task.Run(() => _viewModel.PullAllDayGroupsCommand.Execute(null));
+            await Task.Run(() => _viewModel.PullAllDaysCommand.Execute(null));
     }
 }

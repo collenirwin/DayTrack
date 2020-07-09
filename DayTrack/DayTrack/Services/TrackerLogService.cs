@@ -36,6 +36,17 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await LogDayAsync(trackerId, day),
                 ex => _logger.Error(ex, $"Failed to log day (trackerId: {trackerId}, day: {day})."));
 
+        public async Task DeleteLoggedDayAsync(int id)
+        {
+            var loggedDay = await _context.LoggedDays.FirstAsync(day => day.Id == id);
+            _context.LoggedDays.Remove(loggedDay);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> TryDeleteLoggedDayAsync(int id) =>
+            await Try.RunAsync(async () => await DeleteLoggedDayAsync(id),
+                ex => _logger.Error(ex, $"Failed to delete logged day with id {id}."));
+
         public async Task<IEnumerable<LoggedDay>> GetAllLoggedDaysAsync(int trackerId) =>
             await _context.LoggedDays
                 .Where(day => day.TrackerId == trackerId)

@@ -4,19 +4,13 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="DayTrack.Views.TrackerLogPage"
+             x:Class="DayTrack.Views.EditTrackerLogPage"
+             x:Name="EditTrackerLog"
              Appearing="OnAppearing">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Edit Entries"
-                     Clicked="OnEditEntries" />
-    </ContentPage.ToolbarItems>
-    
-    <ContentPage.Content>
-        <StackLayout Margin="10, 10, 10, 0">
-            <DatePicker Date="{Binding DateToLog}" />
-            <Button Text="LOG" Command="{Binding LogDayCommand}" />
 
-            <ListView ItemsSource="{Binding AllDayGroups}">
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+            <ListView ItemsSource="{Binding AllDays}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -32,12 +26,19 @@
                                 <Label Grid.Column="0"
                                        Text="{Binding Date, StringFormat='{0:M/d/yyyy}'}"
                                        FontSize="Medium"
-                                       HorizontalTextAlignment="Start" />
+                                       HorizontalTextAlignment="Start"
+                                       VerticalTextAlignment="Center" />
 
-                                <Label Grid.Column="1"
-                                       Text="{Binding Count}"
-                                       FontSize="Medium"
-                                       HorizontalTextAlignment="End" />
+                                <Button Grid.Column="1"
+                                        Text="DELETE"
+                                        Command="{Binding BindingContext.DeleteLoggedDayCommand,
+                                            Source={x:Reference Name=EditTrackerLog}}"
+                                        CommandParameter="{Binding .}"
+                                        Margin="0"
+                                        BorderWidth="0"
+                                        Padding="0"
+                                        HeightRequest="25"
+                                        HorizontalOptions="End" />
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

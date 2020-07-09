@@ -25,22 +25,19 @@ namespace DayTrack.ViewModels
         public ObservableCollection<LoggedDay> AllDays { get; } = new ObservableCollection<LoggedDay>();
         public ObservableCollection<LoggedDayGroup> AllDayGroups { get; } = new ObservableCollection<LoggedDayGroup>();
         public ICommand LogDayCommand { get; }
+        public ICommand DeleteLoggedDayCommand { get; }
+        public ICommand PullAllDaysCommand { get; }
+        public ICommand PullAllDayGroupsCommand { get; }
 
-        public TrackerLogViewModel(Tracker tracker, TrackerLogService logService, bool populateGroups)
+        public TrackerLogViewModel(Tracker tracker, TrackerLogService logService)
         {
             _tracker = tracker;
             _logService = logService;
 
             LogDayCommand = new Command(async () => await LogDayAsync());
-
-            if (populateGroups)
-            {
-                _ = PopulateAllDayGroupsAsync();
-            }
-            else
-            {
-                _ = PopulateAllDaysAsync();
-            }
+            DeleteLoggedDayCommand = new Command(async day => await DeleteLoggedDayAsync(day as LoggedDay));
+            PullAllDaysCommand = new Command(async () => await PopulateAllDaysAsync());
+            PullAllDayGroupsCommand = new Command(async () => await PopulateAllDayGroupsAsync());
         }
 
         private async Task LogDayAsync()
@@ -54,6 +51,19 @@ namespace DayTrack.ViewModels
             }
 
             await PopulateAllDayGroupsAsync();
+        }
+
+        private async Task DeleteLoggedDayAsync(LoggedDay loggedDay)
+        {
+            int index = AllDays.IndexOf(loggedDay);
+            AllDays.RemoveAt(index);
+            bool successful = await _logService.TryDeleteLoggedDayAsync(loggedDay.Id);
+
+            if (!successful)
+            {
+                MessagingCenter.Send(this, nameof(DeleteLoggedDayCommand), loggedDay);
+                AllDays.Insert(index, loggedDay);
+            }
         }
 
         private async Task PopulateAllDaysAsync()
