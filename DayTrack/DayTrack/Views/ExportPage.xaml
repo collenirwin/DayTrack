@@ -9,7 +9,20 @@
     
     <ContentPage.Content>
         <StackLayout Margin="10">
-            
+            <Label Text="Tracker to export" FontSize="Medium" />
+
+            <ListView ItemsSource="{Binding TrackerViewModel.AllTrackers}"
+                      SelectedItem="{Binding SelectedTracker}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Button Text="EXPORT"
+                    Command="{Binding ExportCommand}"
+                    IsVisible="{Binding SelectedTracker, Converter={StaticResource NullBoolConverter}}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

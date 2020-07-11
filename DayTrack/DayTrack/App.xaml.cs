@@ -37,6 +37,7 @@ namespace DayTrack
             builder.RegisterType<TrackerLogService>().SingleInstance();
             builder.RegisterType<TrackerViewModel>().SingleInstance();
             builder.RegisterType<ImportViewModel>().SingleInstance();
+            builder.RegisterType<ExportViewModel>().SingleInstance();
 
             DependencyContainer = builder.Build();
             MainPage = new ConductorPage();

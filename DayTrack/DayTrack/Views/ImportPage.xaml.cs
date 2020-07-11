@@ -27,7 +27,7 @@ namespace DayTrack.Views
 
             MessagingCenter.Subscribe<ImportViewModel, Exception>(this, nameof(ImportViewModel.ImportCommand),
                 (sender, ex) => this.DisplayAlertOnMain(title: "Error",
-                    message: $"Error when parsing selected file: {ex.Message}.",
+                    message: $"Error when parsing selected file: {ex.Message}",
                     cancel: "OK"));
 
             MessagingCenter.Subscribe<ImportViewModel>(this, nameof(ImportViewModel.ImportCommand),
