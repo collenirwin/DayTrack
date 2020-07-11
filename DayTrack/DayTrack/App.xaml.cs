@@ -5,6 +5,7 @@ using DayTrack.ViewModels;
 using DayTrack.Views;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.IO;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -23,7 +24,8 @@ namespace DayTrack
             var builder = new ContainerBuilder();
 
             var logger = new LoggerConfiguration()
-                .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File(Path.Combine(FileSystem.AppDataDirectory, "log.txt"),
+                    rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             var context = new AppDbContext();
@@ -34,6 +36,7 @@ namespace DayTrack
             builder.RegisterType<TrackerService>().SingleInstance();
             builder.RegisterType<TrackerLogService>().SingleInstance();
             builder.RegisterType<TrackerViewModel>().SingleInstance();
+            builder.RegisterType<ImportViewModel>().SingleInstance();
 
             DependencyContainer = builder.Build();
             MainPage = new ConductorPage();

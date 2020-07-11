@@ -4,13 +4,12 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="DayTrack.Views.SettingsPage"
-             Title="Settings">
+             x:Class="DayTrack.Views.ExportPage"
+             Title="Export">
     
     <ContentPage.Content>
         <StackLayout Margin="10">
-            <Button Text="IMPORT TRACKER DATA" Clicked="OnImportClick" />
-            <Button Text="EXPORT TRACKER DATA" Clicked="OnExportClick" />
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
