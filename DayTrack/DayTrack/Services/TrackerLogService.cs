@@ -1,6 +1,7 @@
 ﻿using DayTrack.Data;
 using DayTrack.Models;
 using DayTrack.Utils;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;
@@ -96,5 +97,20 @@ namespace DayTrack.Services
             GroupSortOption sortOption) =>
                 await Try.RunAsync(async () => await GetAllLoggedDayGroupsAsync(trackerId, sortOption),
                     ex => _logger.Error(ex, $"Failed to get all logged day groups for tracker id {trackerId}."));
+
+        public async Task BulkAddEntriesAsync(IEnumerable<DateTime> days, int trackerId)
+        {
+            var loggedDays = days.Select(day => new LoggedDay
+            {
+                TrackerId = trackerId,
+                Date = day
+            }).ToList();
+
+            await _context.BulkInsertAsync(loggedDays);
+        }
+
+        public async Task<bool> TryBulkAddEntriesAsync(IEnumerable<DateTime> days, int trackerId) =>
+            await Try.RunAsync(async () => await BulkAddEntriesAsync(days, trackerId),
+                ex => _logger.Error(ex, $"Bulk insert operation failed (tracker id: {trackerId})."));
     }
 }

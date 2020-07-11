@@ -11,6 +11,24 @@
         <StackLayout Margin="10">
             <Button Text="SELECT A FILE TO IMPORT" Command="{Binding SelectFileCommand}" />
             <Label Text="{Binding SelectedFile.FileName}" />
+
+            <StackLayout IsVisible="{Binding SelectedFile, Converter={StaticResource NullBoolConverter}}">
+                <BoxView HeightRequest="1" BackgroundColor="#EEEEEE" Margin="10" />
+                <Label Text="Tracker to import into" FontSize="Medium" />
+                
+                <ListView ItemsSource="{Binding TrackerViewModel.AllTrackers}"
+                          SelectedItem="{Binding SelectedTracker}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Button Text="IMPORT"
+                        Command="{Binding ImportCommand}"
+                        IsVisible="{Binding SelectedTracker, Converter={StaticResource NullBoolConverter}}" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

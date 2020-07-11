@@ -1,7 +1,11 @@
-﻿using DayTrack.Services;
+﻿using DayTrack.Models;
+using DayTrack.Services;
+using DayTrack.Utils;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -11,6 +15,7 @@ namespace DayTrack.ViewModels
     public class ImportViewModel : ViewModelBase
     {
         private FileData _selectedFile;
+        private Tracker _selectedTracker;
         private readonly TrackerLogService _logService;
 
         public FileData SelectedFile
@@ -19,13 +24,23 @@ namespace DayTrack.ViewModels
             set => SetAndRaiseIfChanged(ref _selectedFile, value);
         }
 
-        public ICommand SelectFileCommand { get; }
+        public Tracker SelectedTracker
+        {
+            get => _selectedTracker;
+            set => SetAndRaiseIfChanged(ref _selectedTracker, value);
+        }
 
-        public ImportViewModel(TrackerLogService logService)
+        public TrackerViewModel TrackerViewModel { get; }
+        public ICommand SelectFileCommand { get; }
+        public ICommand ImportCommand { get; }
+
+        public ImportViewModel(TrackerLogService logService, TrackerViewModel trackerViewModel)
         {
             _logService = logService;
+            TrackerViewModel = trackerViewModel;
 
             SelectFileCommand = new Command(async () => await SelectFileAsync());
+            ImportCommand = new Command(async () => await ImportAsync().ExpressLoading(this));
         }
 
         private async Task SelectFileAsync()
@@ -46,6 +61,43 @@ namespace DayTrack.ViewModels
             {
                 MessagingCenter.Send(this, nameof(SelectFileCommand), ex);
             }
+        }
+
+        private async Task ImportAsync()
+        {
+            if (SelectedFile == null || SelectedTracker == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var days = Encoding.UTF8.GetString(SelectedFile.DataArray)
+                    .Trim()
+                    .Split('\n')
+                    .Select(line => DateTime.Parse(line));
+
+                bool successful = await _logService.TryBulkAddEntriesAsync(days, SelectedTracker.Id);
+
+                if (!successful)
+                {
+                    MessagingCenter.Send(this, nameof(ImportCommand));
+                    return;
+                }
+
+                MessagingCenter.Send(this, nameof(ImportCommand), SelectedTracker);
+                ResetAllValues();
+            }
+            catch (Exception ex)
+            {
+                MessagingCenter.Send(this, nameof(ImportCommand), ex);
+            }
+        }
+
+        private void ResetAllValues()
+        {
+            SelectedFile = null;
+            SelectedTracker = null;
         }
     }
 }

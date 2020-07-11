@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using DayTrack.Models;
 using DayTrack.Utils;
 using DayTrack.ViewModels;
 using System;
@@ -23,6 +24,19 @@ namespace DayTrack.Views
                 (sender, ex) => this.DisplayAlertOnMain(title: "Error",
                     message: $"Failed to select the file (details: {ex.Message}).",
                     cancel: "OK"));
+
+            MessagingCenter.Subscribe<ImportViewModel, Exception>(this, nameof(ImportViewModel.ImportCommand),
+                (sender, ex) => this.DisplayAlertOnMain(title: "Error",
+                    message: $"Error when parsing selected file: {ex.Message}.",
+                    cancel: "OK"));
+
+            MessagingCenter.Subscribe<ImportViewModel>(this, nameof(ImportViewModel.ImportCommand),
+                sender => this.DisplayAlertOnMain(title: "Error",
+                    message: $"Import operation failed.",
+                    cancel: "OK"));
+
+            MessagingCenter.Subscribe<ImportViewModel, Tracker>(this, nameof(ImportViewModel.ImportCommand),
+                (sender, tracker) => App.Conductor.NavigateToTrackerLogPage(tracker));
         }
     }
 }

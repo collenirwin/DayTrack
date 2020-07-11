@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.2.0" />
+    <PackageReference Include="EFCore.BulkExtensions" Version="3.1.4" />
     <PackageReference Include="microsoft.entityframeworkcore" Version="3.1.5" />
     <PackageReference Include="microsoft.entityframeworkcore.sqlite" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
