@@ -10,15 +10,12 @@ namespace DayTrack.Data
     /// </summary>
     public class AppDbContext : DbContext
     {
-        private const string _fileName = "app.db";
-        private readonly string _path = Path
-            .Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _fileName);
-
         public DbSet<Tracker> Trackers { get; set; }
         public DbSet<LoggedDay> LoggedDays { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-            optionsBuilder.UseSqlite($"Data source={_path}");
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

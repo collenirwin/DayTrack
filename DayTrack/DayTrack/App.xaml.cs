@@ -5,6 +5,7 @@ using DayTrack.ViewModels;
 using DayTrack.Views;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System;
 using System.IO;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -28,7 +29,13 @@ namespace DayTrack
                     rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            var context = new AppDbContext();
+            string databasePath = Path
+                .Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "app.db");
+
+            var context = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite($"Data source={databasePath}")
+                .Options);
+
             context.Database.Migrate();
 
             builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
