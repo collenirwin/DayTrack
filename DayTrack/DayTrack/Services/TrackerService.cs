@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace DayTrack.Services
 {
+    /// <summary>
+    /// Contains methods for interaction with the <see cref="Tracker"/> table.
+    /// </summary>
     public class TrackerService
     {
         private readonly AppDbContext _context;
@@ -31,6 +34,11 @@ namespace DayTrack.Services
             return tracker;
         }
 
+        /// <summary>
+        /// Adds a new <see cref="Tracker"/> with the given name to the database.
+        /// </summary>
+        /// <param name="name">Name of the tracker.</param>
+        /// <returns>The created tracker, or null if unsuccessful.</returns>
         public async Task<Tracker> TryAddTrackerAsync(string name) =>
             await Try.RunAsync(async () => await AddTrackerAsync(name),
                 ex => _logger.Error(ex, $"Failed to add tracker with name {name}."));
@@ -40,6 +48,10 @@ namespace DayTrack.Services
                 .OrderBy(tracker => tracker.Name)
                 .ToListAsync();
 
+        /// <summary>
+        /// Gets all <see cref="Tracker"/>s from the database, ordered by name.
+        /// </summary>
+        /// <returns>null if unsuccessful.</returns>
         public async Task<IEnumerable<Tracker>> TryGetAllTrackersAsync() =>
             await Try.RunAsync(GetAllTrackersAsync,
                 ex => _logger.Error(ex, "Failed to get all trackers."));
@@ -51,6 +63,11 @@ namespace DayTrack.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Deletes a specific <see cref="Tracker"/> from the database.
+        /// </summary>
+        /// <param name="id">Id of the tracker.</param>
+        /// <returns>true if successful.</returns>
         public async Task<bool> TryDeleteTrackerAsync(int id) =>
             await Try.RunAsync(async () => await DeleteTrackerAsync(id),
                 ex => _logger.Error(ex, $"Failed to delete tracker with id {id}."));
@@ -65,6 +82,12 @@ namespace DayTrack.Services
             return tracker;
         }
 
+        /// <summary>
+        /// Updates the name of a specific <see cref="Tracker"/> in the database.
+        /// </summary>
+        /// <param name="id">Id of the tracker.</param>
+        /// <param name="name">New name for the tracker.</param>
+        /// <returns>The updated tracker, or null if unsuccessful.</returns>
         public async Task<Tracker> TryUpdateTrackerNameAsync(int id, string name) =>
             await Try.RunAsync(async () => await UpdateTrackerNameAsync(id, name),
                 ex => _logger.Error(ex, $"Failed to update tracker with id {id}'s name to {name}."));
