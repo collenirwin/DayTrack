@@ -34,6 +34,20 @@ namespace DayTrack.Tests
         }
 
         [Fact]
+        public async Task TryAddTrackerAsync_NullName_ReturnsNull()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            string name = null;
+
+            // act
+            var tracker = await service.TryAddTrackerAsync(name);
+
+            // assert
+            Assert.Null(tracker);
+        }
+
+        [Fact]
         public async Task TryAddTrackerAsync_NameOnly_HasId()
         {
             // arrange
@@ -76,6 +90,64 @@ namespace DayTrack.Tests
 
             // assert
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task TryDeleteTrackerAsync_NewId_ReturnsFalse()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 100;
+
+            // act
+            bool successful = await service.TryDeleteTrackerAsync(id);
+
+            // assert
+            Assert.False(successful);
+        }
+
+        [Fact]
+        public async Task TryDeleteTrackerAsync_ExistingId_ReturnsTrue()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+
+            // act
+            bool successful = await service.TryDeleteTrackerAsync(id);
+
+            // assert
+            Assert.True(successful);
+        }
+
+        [Fact]
+        public async Task TryDeleteTrackerAsync_ExistingId_DeletesTracker()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+
+            // act
+            await service.TryDeleteTrackerAsync(id);
+            var tracker = _context.Trackers.FirstOrDefault(t => t.Id == id);
+
+            // assert
+            Assert.Null(tracker);
+        }
+
+        [Fact]
+        public async Task TryDeleteTrackerAsync_ExistingId_DeletesLoggedDays()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+
+            // act
+            await service.TryDeleteTrackerAsync(id);
+            var days = _context.LoggedDays.Where(day => day.TrackerId == id);
+
+            // assert
+            Assert.Empty(days);
         }
     }
 }
