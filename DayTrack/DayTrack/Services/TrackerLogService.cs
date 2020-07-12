@@ -77,18 +77,13 @@ namespace DayTrack.Services
                         Count = group.Count()
                     });
 
-            switch (sortOption)
+            query = sortOption switch
             {
-                case GroupSortOption.DateDescending:
-                    query = query.OrderByDescending(group => group.Date);
-                    break;
-                case GroupSortOption.DateAscending:
-                    query = query.OrderBy(group => group.Date);
-                    break;
-                case GroupSortOption.CountDescending:
-                    query = query.OrderByDescending(group => group.Count);
-                    break;
-            }
+                GroupSortOption.DateDescending => query.OrderByDescending(group => group.Date),
+                GroupSortOption.DateAscending => query.OrderBy(group => group.Date),
+                GroupSortOption.CountDescending => query.OrderByDescending(group => group.Count),
+                _ => throw new NotImplementedException($"Sort option '{sortOption}' not supported.")
+            };
 
             return await query.ToListAsync();
         }

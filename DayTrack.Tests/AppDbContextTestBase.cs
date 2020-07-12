@@ -9,10 +9,10 @@ namespace DayTrack.Tests
     {
         protected readonly AppDbContext _context;
 
-        public AppDbContextTestBase()
+        public AppDbContextTestBase(string name)
         {
             _context = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
-               .UseSqlite("Data source=test.db")
+               .UseSqlite($"Data source={name}.db")
                .Options);
 
             Seed();
