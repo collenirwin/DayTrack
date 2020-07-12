@@ -1,5 +1,6 @@
 ﻿using DayTrack.Services;
 using Serilog;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -63,6 +64,38 @@ namespace DayTrack.Tests
 
             // assert
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task TryGetAllLoggedDayGroupsAsync_GroupsByDay()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 1;
+
+            // act
+            var groups = await service
+                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateDescending);
+            var duplicateDate = groups.First(group => group.Date == new DateTime(2020, 1, 1));
+
+            // assert
+            Assert.Equal(2, duplicateDate.Count);
+            Assert.Equal(3, groups.Count()); // 3 items in the list overall because the duplicates should count as 1
+        }
+
+        [Fact]
+        public async Task TryGetAllLoggedDayGroupsAsync_NewTrackerId_ReturnsEmpty()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 100;
+
+            // act
+            var groups = await service
+                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateDescending);
+
+            // assert
+            Assert.Empty(groups);
         }
     }
 }
