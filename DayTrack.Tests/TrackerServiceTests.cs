@@ -226,5 +226,18 @@ namespace DayTrack.Tests
             // assert
             Assert.NotNull(tracker);
         }
+
+        [Fact]
+        public async Task TryGetAllTrackersAsync_ReturnsAllTrackers()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+
+            // act
+            var trackers = await service.TryGetAllTrackersAsync();
+
+            // assert
+            Assert.Equal(3, trackers.Count());
+        }
     }
 }
