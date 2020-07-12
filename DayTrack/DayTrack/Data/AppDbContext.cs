@@ -1,7 +1,5 @@
 ﻿using DayTrack.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.IO;
 
 namespace DayTrack.Data
 {
@@ -22,6 +20,11 @@ namespace DayTrack.Data
             modelBuilder.Entity<Tracker>()
                 .HasIndex(tracker => tracker.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<Tracker>()
+                .HasMany(tracker => tracker.LoggedDays)
+                .WithOne(day => day.Tracker)
+                .IsRequired();
         }
     }
 }
