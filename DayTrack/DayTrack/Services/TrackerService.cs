@@ -57,6 +57,8 @@ namespace DayTrack.Services
 
         private async Task<Tracker> UpdateTrackerNameAsync(int id, string name)
         {
+            name = name ?? throw new ArgumentNullException(nameof(name));
+
             var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
             tracker.Name = name;
             await _context.SaveChangesAsync();

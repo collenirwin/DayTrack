@@ -149,5 +149,82 @@ namespace DayTrack.Tests
             // assert
             Assert.Empty(days);
         }
+
+        [Fact]
+        public async Task TryUpdateTrackerNameAsync_NullName_ReturnsNull()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+            string name = null;
+
+            // act
+            var tracker = await service.TryUpdateTrackerNameAsync(id, name);
+
+            // assert
+            Assert.Null(tracker);
+        }
+
+        [Fact]
+        public async Task TryUpdateTrackerNameAsync_NullName_DoesNotUpdateTracker()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+            string name = null;
+
+            // act
+            await service.TryUpdateTrackerNameAsync(id, name);
+            var tracker = _context.Trackers.First(t => t.Id == id);
+
+            // assert
+            Assert.NotNull(tracker.Name);
+        }
+
+        [Fact]
+        public async Task TryUpdateTrackerNameAsync_NewName_ReturnsTracker()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+            string name = "Anne";
+
+            // act
+            var tracker = await service.TryUpdateTrackerNameAsync(id, name);
+
+            // assert
+            Assert.NotNull(tracker);
+        }
+
+        [Fact]
+        public async Task TryUpdateTrackerNameAsync_NewName_UpdatesTracker()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+            string name = "Anne";
+
+            // act
+            await service.TryUpdateTrackerNameAsync(id, name);
+            var tracker = _context.Trackers.First(t => t.Id == id);
+
+            // assert
+            Assert.Equal(name, tracker.Name);
+        }
+
+        [Fact]
+        public async Task TryUpdateTrackerNameAsync_SameName_ReturnsTracker()
+        {
+            // arrange
+            var service = new TrackerService(_context, _logger);
+            int id = 1;
+            string name = "T0";
+
+            // act
+            var tracker = await service.TryUpdateTrackerNameAsync(id, name);
+
+            // assert
+            Assert.NotNull(tracker);
+        }
     }
 }
