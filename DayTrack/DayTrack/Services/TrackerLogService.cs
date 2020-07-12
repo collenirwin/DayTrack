@@ -29,7 +29,7 @@ namespace DayTrack.Services
             _logger = logger;
         }
 
-        public async Task LogDayAsync(int trackerId, DateTime day)
+        private async Task LogDayAsync(int trackerId, DateTime day)
         {
             _context.LoggedDays.Add(new LoggedDay
             {
@@ -44,7 +44,7 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await LogDayAsync(trackerId, day),
                 ex => _logger.Error(ex, $"Failed to log day (trackerId: {trackerId}, day: {day})."));
 
-        public async Task DeleteLoggedDayAsync(int id)
+        private async Task DeleteLoggedDayAsync(int id)
         {
             var loggedDay = await _context.LoggedDays.FirstAsync(day => day.Id == id);
             _context.LoggedDays.Remove(loggedDay);
@@ -55,7 +55,7 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await DeleteLoggedDayAsync(id),
                 ex => _logger.Error(ex, $"Failed to delete logged day with id {id}."));
 
-        public async Task<IEnumerable<LoggedDay>> GetAllLoggedDaysAsync(int trackerId) =>
+        private async Task<IEnumerable<LoggedDay>> GetAllLoggedDaysAsync(int trackerId) =>
             await _context.LoggedDays
                 .Where(day => day.TrackerId == trackerId)
                 .OrderByDescending(day => day.Date)
@@ -65,7 +65,7 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await GetAllLoggedDaysAsync(trackerId),
                 ex => _logger.Error(ex, $"Failed to get all logged days for tracker id {trackerId}."));
 
-        public async Task<IEnumerable<LoggedDayGroup>> GetAllLoggedDayGroupsAsync(int trackerId,
+        private async Task<IEnumerable<LoggedDayGroup>> GetAllLoggedDayGroupsAsync(int trackerId,
             GroupSortOption sortOption)
         {
             var query = _context.LoggedDays
@@ -98,7 +98,7 @@ namespace DayTrack.Services
                 await Try.RunAsync(async () => await GetAllLoggedDayGroupsAsync(trackerId, sortOption),
                     ex => _logger.Error(ex, $"Failed to get all logged day groups for tracker id {trackerId}."));
 
-        public async Task BulkAddEntriesAsync(IEnumerable<DateTime> days, int trackerId)
+        private async Task BulkAddEntriesAsync(IEnumerable<DateTime> days, int trackerId)
         {
             var loggedDays = days.Select(day => new LoggedDay
             {

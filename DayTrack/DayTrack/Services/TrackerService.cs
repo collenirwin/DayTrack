@@ -21,7 +21,7 @@ namespace DayTrack.Services
             _logger = logger;
         }
 
-        public async Task<Tracker> AddTrackerAsync(string name)
+        private async Task<Tracker> AddTrackerAsync(string name)
         {
             name = name ?? throw new ArgumentNullException(nameof(name));
 
@@ -35,7 +35,7 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await AddTrackerAsync(name),
                 ex => _logger.Error(ex, $"Failed to add tracker with name {name}."));
 
-        public async Task<IEnumerable<Tracker>> GetAllTrackersAsync() =>
+        private async Task<IEnumerable<Tracker>> GetAllTrackersAsync() =>
             await _context.Trackers
                 .OrderBy(tracker => tracker.Name)
                 .ToListAsync();
@@ -44,7 +44,7 @@ namespace DayTrack.Services
             await Try.RunAsync(GetAllTrackersAsync,
                 ex => _logger.Error(ex, "Failed to get all trackers."));
 
-        public async Task DeleteTrackerAsync(int id)
+        private async Task DeleteTrackerAsync(int id)
         {
             var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
             _context.Trackers.Remove(tracker);
@@ -55,7 +55,7 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await DeleteTrackerAsync(id),
                 ex => _logger.Error(ex, $"Failed to delete tracker with id {id}."));
 
-        public async Task<Tracker> UpdateTrackerNameAsync(int id, string name)
+        private async Task<Tracker> UpdateTrackerNameAsync(int id, string name)
         {
             var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
             tracker.Name = name;
