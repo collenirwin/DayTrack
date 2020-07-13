@@ -10,6 +10,8 @@ namespace DayTrack.Tests
     {
         protected readonly AppDbContext _context;
 
+        protected int TrackerCount { get; private set; }
+
         public AppDbContextTestBase(string name)
         {
             _context = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
@@ -24,43 +26,45 @@ namespace DayTrack.Tests
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
 
-            _context.Trackers.Add(new Tracker
+            var trackers = new List<Tracker>
             {
-                Name = "T0",
-                LoggedDays = new List<LoggedDay>
+                new Tracker
                 {
-                    new LoggedDay { Date = new DateTime(2020, 1, 1) },
-                    new LoggedDay { Date = new DateTime(2020, 1, 1) },
-                    new LoggedDay { Date = new DateTime(2020, 2, 1) },
-                    new LoggedDay { Date = new DateTime(2020, 2, 2) }
-                }
-            });
-
-            _context.Trackers.Add(new Tracker
-            {
-                Name = "T1",
-                LoggedDays = new List<LoggedDay>
+                    Name = "T0",
+                    LoggedDays = new List<LoggedDay>
+                    {
+                        new LoggedDay { Date = new DateTime(2020, 1, 1) },
+                        new LoggedDay { Date = new DateTime(2020, 1, 1) },
+                        new LoggedDay { Date = new DateTime(2020, 2, 1) },
+                        new LoggedDay { Date = new DateTime(2020, 2, 2) }
+                    }
+                },
+                new Tracker
                 {
-                    new LoggedDay { Date = new DateTime(2020, 1, 1) },
-                    new LoggedDay { Date = new DateTime(2020, 1, 2) }
-                }
-            });
-
-            _context.Trackers.Add(new Tracker
-            {
-                Name = "T2"
-            });
-
-            _context.Trackers.Add(new Tracker
-            {
-                Name = "T3",
-                LoggedDays = new List<LoggedDay>
+                    Name = "T1",
+                    LoggedDays = new List<LoggedDay>
+                    {
+                        new LoggedDay { Date = new DateTime(2020, 1, 1) },
+                        new LoggedDay { Date = new DateTime(2020, 1, 2) }
+                    }
+                },
+                new Tracker
                 {
-                    new LoggedDay { Date = new DateTime(2020, 1, 1, 0, 0, 0) },
-                    new LoggedDay { Date = new DateTime(2020, 1, 1, 1, 0, 0) }
+                    Name = "T2"
+                },
+                new Tracker
+                {
+                    Name = "T3",
+                    LoggedDays = new List<LoggedDay>
+                    {
+                        new LoggedDay { Date = new DateTime(2020, 1, 1, 0, 0, 0) },
+                        new LoggedDay { Date = new DateTime(2020, 1, 1, 1, 0, 0) }
+                    }
                 }
-            });
+            };
 
+            TrackerCount = trackers.Count;
+            _context.Trackers.AddRange(trackers);
             _context.SaveChanges();
         }
 
