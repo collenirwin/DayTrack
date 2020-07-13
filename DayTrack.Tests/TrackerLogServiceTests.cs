@@ -202,5 +202,33 @@ namespace DayTrack.Tests
             // assert
             Assert.Empty(groups);
         }
+
+        [Fact]
+        public async Task TryGetAllLoggedDaysAsync_NewTrackerId_ReturnsEmpty()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 100;
+
+            // act
+            var loggedDays = await service.TryGetAllLoggedDaysAsync(trackerId);
+
+            // assert
+            Assert.Empty(loggedDays);
+        }
+
+        [Fact]
+        public async Task TryGetAllLoggedDaysAsync_ReturnsAllLoggedDays()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 1;
+
+            // act
+            var loggedDays = await service.TryGetAllLoggedDaysAsync(trackerId);
+
+            // assert
+            Assert.Equal(4, loggedDays.Count());
+        }
     }
 }
