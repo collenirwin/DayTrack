@@ -29,7 +29,7 @@ namespace DayTrack.Services
             _logger = logger;
         }
 
-        private async Task LogDayAsync(int trackerId, DateTime day)
+        private async Task LogDayAsync(DateTime day, int trackerId)
         {
             _context.LoggedDays.Add(new LoggedDay
             {
@@ -40,8 +40,8 @@ namespace DayTrack.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> TryLogDayAsync(int trackerId, DateTime day) =>
-            await Try.RunAsync(async () => await LogDayAsync(trackerId, day),
+        public async Task<bool> TryLogDayAsync(DateTime day, int trackerId) =>
+            await Try.RunAsync(async () => await LogDayAsync(day, trackerId),
                 ex => _logger.Error(ex, $"Failed to log day (trackerId: {trackerId}, day: {day})."));
 
         private async Task DeleteLoggedDayAsync(int id)

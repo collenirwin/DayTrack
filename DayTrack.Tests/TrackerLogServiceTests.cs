@@ -27,7 +27,7 @@ namespace DayTrack.Tests
             var day = DateTime.Now.Date;
 
             // act
-            bool successful = await service.TryLogDayAsync(trackerId, day);
+            bool successful = await service.TryLogDayAsync(day, trackerId);
 
             // assert
             Assert.False(successful);
@@ -42,7 +42,7 @@ namespace DayTrack.Tests
             var day = new DateTime(2020, 1, 1);
 
             // act
-            bool successful = await service.TryLogDayAsync(trackerId, day);
+            bool successful = await service.TryLogDayAsync(day, trackerId);
 
             // assert
             Assert.True(successful);
@@ -57,7 +57,7 @@ namespace DayTrack.Tests
             var day = DateTime.Now.Date;
 
             // act
-            await service.TryLogDayAsync(trackerId, day);
+            await service.TryLogDayAsync(day, trackerId);
             var loggedDay = _context.LoggedDays.FirstOrDefault(d => d.TrackerId == trackerId && d.Date == day);
 
             // assert

@@ -51,7 +51,7 @@ namespace DayTrack.ViewModels
 
         private async Task LogDayAsync()
         {
-            bool successful = await _logService.TryLogDayAsync(_tracker.Id, DateToLog);
+            bool successful = await _logService.TryLogDayAsync(DateToLog, _tracker.Id);
 
             if (!successful)
             {
