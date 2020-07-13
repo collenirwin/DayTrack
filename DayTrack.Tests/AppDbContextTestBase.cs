@@ -51,6 +51,16 @@ namespace DayTrack.Tests
                 Name = "T2"
             });
 
+            _context.Trackers.Add(new Tracker
+            {
+                Name = "T3",
+                LoggedDays = new List<LoggedDay>
+                {
+                    new LoggedDay { Date = new DateTime(2020, 1, 1, 0, 0, 0) },
+                    new LoggedDay { Date = new DateTime(2020, 1, 1, 1, 0, 0) }
+                }
+            });
+
             _context.SaveChanges();
         }
 

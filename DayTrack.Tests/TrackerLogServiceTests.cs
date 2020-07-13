@@ -189,6 +189,21 @@ namespace DayTrack.Tests
         }
 
         [Fact]
+        public async Task TryGetAllLoggedDayGroupsAsync_IgnoresTimeDifferences()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 4;
+
+            // act
+            var groups = await service
+                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateDescending);
+
+            // assert
+            Assert.Single(groups);
+        }
+
+        [Fact]
         public async Task TryGetAllLoggedDayGroupsAsync_NewTrackerId_ReturnsEmpty()
         {
             // arrange

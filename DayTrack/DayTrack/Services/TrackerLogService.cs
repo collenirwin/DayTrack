@@ -92,7 +92,7 @@ namespace DayTrack.Services
         {
             var query = _context.LoggedDays
                 .Where(day => day.TrackerId == trackerId)
-                .GroupBy(day => day.Date,
+                .GroupBy(day => day.Date.Date,
                     (day, group) => new LoggedDayGroup
                     {
                         Date = day,

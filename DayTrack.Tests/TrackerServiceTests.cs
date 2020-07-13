@@ -237,7 +237,7 @@ namespace DayTrack.Tests
             var trackers = await service.TryGetAllTrackersAsync();
 
             // assert
-            Assert.Equal(3, trackers.Count());
+            Assert.Equal(4, trackers.Count());
         }
     }
 }
