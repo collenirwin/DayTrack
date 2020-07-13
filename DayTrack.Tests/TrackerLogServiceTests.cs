@@ -65,6 +65,65 @@ namespace DayTrack.Tests
         }
 
         [Fact]
+        public async Task TryDeleteLoggedDayAsync_NewId_ReturnsFalse()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int id = 100;
+
+            // act
+            bool successful = await service.TryDeleteLoggedDayAsync(id);
+
+            // assert
+            Assert.False(successful);
+        }
+
+        [Fact]
+        public async Task TryDeleteLoggedDayAsync_ExistingId_ReturnsTrue()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int id = 1;
+
+            // act
+            bool successful = await service.TryDeleteLoggedDayAsync(id);
+
+            // assert
+            Assert.True(successful);
+        }
+
+        [Fact]
+        public async Task TryDeleteLoggedDayAsync_ExistingId_DeletesLoggedDay()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int id = 1;
+
+            // act
+            await service.TryDeleteLoggedDayAsync(id);
+            var loggedDay = _context.LoggedDays.FirstOrDefault(day => day.Id == id);
+
+            // assert
+            Assert.Null(loggedDay);
+        }
+
+        [Fact]
+        public async Task TryDeleteLoggedDayAsync_ExistingId_DoesNotDeleteTracker()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int id = 1;
+
+            // act
+            var trackerId = _context.LoggedDays.First(day => day.Id == id).TrackerId;
+            await service.TryDeleteLoggedDayAsync(id);
+            var tracker = _context.Trackers.FirstOrDefault(t => t.Id == trackerId);
+
+            // assert
+            Assert.NotNull(tracker);
+        }
+
+        [Fact]
         public async Task TryGetAllLoggedDayGroupsAsync_DateDescending_IsInDateDescendingOrder()
         {
             // arrange
