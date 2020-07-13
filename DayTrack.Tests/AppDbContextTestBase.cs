@@ -2,6 +2,7 @@
 using DayTrack.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace DayTrack.Tests
 {
@@ -26,7 +27,7 @@ namespace DayTrack.Tests
             _context.Trackers.Add(new Tracker
             {
                 Name = "T0",
-                LoggedDays = new[]
+                LoggedDays = new List<LoggedDay>
                 {
                     new LoggedDay { Date = new DateTime(2020, 1, 1) },
                     new LoggedDay { Date = new DateTime(2020, 1, 1) },
@@ -38,7 +39,7 @@ namespace DayTrack.Tests
             _context.Trackers.Add(new Tracker
             {
                 Name = "T1",
-                LoggedDays = new[]
+                LoggedDays = new List<LoggedDay>
                 {
                     new LoggedDay { Date = new DateTime(2020, 1, 1) },
                     new LoggedDay { Date = new DateTime(2020, 1, 2) }

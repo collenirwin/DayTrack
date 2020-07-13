@@ -14,8 +14,54 @@ namespace DayTrack.Tests
         public TrackerLogServiceTests() : base(nameof(TrackerLogServiceTests))
         {
             _logger = new LoggerConfiguration()
-                .WriteTo.Console()
+                .WriteTo.Debug()
                 .CreateLogger();
+        }
+
+        [Fact]
+        public async Task TryLogDayAsync_NewTrackerId_ReturnsFalse()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 100;
+            var day = DateTime.Now.Date;
+
+            // act
+            bool successful = await service.TryLogDayAsync(trackerId, day);
+
+            // assert
+            Assert.False(successful);
+        }
+
+        [Fact]
+        public async Task TryLogDayAsync_DuplicateDate_ReturnsTrue()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 1;
+            var day = new DateTime(2020, 1, 1);
+
+            // act
+            bool successful = await service.TryLogDayAsync(trackerId, day);
+
+            // assert
+            Assert.True(successful);
+        }
+
+        [Fact]
+        public async Task TryLogDayAsync_ExistsInDb()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 1;
+            var day = DateTime.Now.Date;
+
+            // act
+            await service.TryLogDayAsync(trackerId, day);
+            var loggedDay = _context.LoggedDays.FirstOrDefault(d => d.TrackerId == trackerId && d.Date == day);
+
+            // assert
+            Assert.NotNull(loggedDay);
         }
 
         [Fact]

@@ -15,7 +15,7 @@ namespace DayTrack.Tests
         public TrackerServiceTests() : base(nameof(TrackerServiceTests))
         {
             _logger = new LoggerConfiguration()
-                .WriteTo.Console()
+                .WriteTo.Debug()
                 .CreateLogger();
         }
 
