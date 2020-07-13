@@ -10,11 +10,26 @@ namespace DayTrack.Models
     /// </summary>
     public class Tracker : ITimeStamped
     {
+        /// <summary>
+        /// Auto-generated primary key.
+        /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
+        /// <summary>
+        /// The name of this tracker.
+        /// </summary>
         public string Name { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// The days logged under this tracker.
+        /// </summary>
         public ICollection<LoggedDay> LoggedDays { get; set; }
+
+        /// <summary>
+        /// Creation timestamp.
+        /// </summary>
+        public DateTime Created { get; set; } = DateTime.Now;
     }
 }

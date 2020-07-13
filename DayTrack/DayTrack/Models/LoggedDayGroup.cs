@@ -7,7 +7,14 @@ namespace DayTrack.Models
     /// </summary>
     public class LoggedDayGroup
     {
+        /// <summary>
+        /// The day logged.
+        /// </summary>
         public DateTime Date { get; set; }
+
+        /// <summary>
+        /// The number of other <see cref="LoggedDay"/>s logged for this day.
+        /// </summary>
         public int Count { get; set; }
     }
 }
