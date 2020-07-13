@@ -230,5 +230,68 @@ namespace DayTrack.Tests
             // assert
             Assert.Equal(4, loggedDays.Count());
         }
+
+        [Fact]
+        public async Task TryBulkAddEntriesAsync_NewTrackerId_ReturnsFalse()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 100;
+            var days = new[]
+            {
+                new DateTime(2020, 1, 1),
+                new DateTime(2020, 2, 2),
+                DateTime.Now
+            };
+
+            // act
+            bool successful = await service.TryBulkAddEntriesAsync(days, trackerId);
+
+            // assert
+            Assert.False(successful);
+        }
+
+        [Fact]
+        public async Task TryBulkAddEntriesAsync_ExistingTrackerId_ReturnsTrue()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 1;
+            var days = new[]
+            {
+                new DateTime(2020, 1, 1),
+                new DateTime(2020, 2, 2),
+                DateTime.Now
+            };
+
+            // act
+            bool successful = await service.TryBulkAddEntriesAsync(days, trackerId);
+
+            // assert
+            Assert.True(successful);
+        }
+
+        [Fact]
+        public async Task TryBulkAddEntriesAsync_ExistingTrackerId_AddsToDb()
+        {
+            // arrange
+            var service = new TrackerLogService(_context, _logger);
+            int trackerId = 3; // tracker with no existing logged days
+            var days = new[]
+            {
+                new DateTime(2020, 1, 1),
+                new DateTime(2020, 2, 2),
+                DateTime.Now
+            };
+
+            // act
+            await service.TryBulkAddEntriesAsync(days, trackerId);
+            var loggedDays = (await service.TryGetAllLoggedDaysAsync(trackerId))
+                .Select(day => day.Date)
+                .OrderBy(day => day);
+
+            // assert
+            Assert.Equal(days, loggedDays);
+        }
     }
 }
