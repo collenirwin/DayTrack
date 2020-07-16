@@ -6,10 +6,12 @@ using Plugin.Permissions.Abstractions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
+[assembly: InternalsVisibleTo("DayTrack.Tests")]
 namespace DayTrack.ViewModels
 {
     public class ExportViewModel : ViewModelBase
@@ -34,7 +36,7 @@ namespace DayTrack.ViewModels
             ExportCommand = new Command(async () => await ExportAsync().ExpressLoading(this));
         }
 
-        private async Task ExportAsync()
+        internal async Task ExportAsync()
         {
             if (SelectedTracker == null)
             {

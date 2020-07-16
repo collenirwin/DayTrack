@@ -3,10 +3,12 @@ using DayTrack.Services;
 using DayTrack.Utils;
 using System;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
+[assembly: InternalsVisibleTo("DayTrack.Tests")]
 namespace DayTrack.ViewModels
 {
     public class TrackerLogViewModel : ViewModelBase
@@ -49,7 +51,7 @@ namespace DayTrack.ViewModels
             PullAllDayGroupsCommand = new Command(async () => await PopulateAllDayGroupsAsync().ExpressLoading(this));
         }
 
-        private async Task LogDayAsync()
+        internal async Task LogDayAsync()
         {
             bool successful = await _logService.TryLogDayAsync(DateToLog, _tracker.Id);
 
@@ -62,7 +64,7 @@ namespace DayTrack.ViewModels
             await PopulateAllDayGroupsAsync();
         }
 
-        private async Task DeleteLoggedDayAsync(LoggedDay loggedDay)
+        internal async Task DeleteLoggedDayAsync(LoggedDay loggedDay)
         {
             int index = AllDays.IndexOf(loggedDay);
             AllDays.RemoveAt(index);
@@ -75,7 +77,7 @@ namespace DayTrack.ViewModels
             }
         }
 
-        private async Task PopulateAllDaysAsync()
+        internal async Task PopulateAllDaysAsync()
         {
             var allDays = await _logService.TryGetAllLoggedDaysAsync(_tracker.Id);
 
@@ -92,7 +94,7 @@ namespace DayTrack.ViewModels
             }
         }
 
-        private async Task PopulateAllDayGroupsAsync()
+        internal async Task PopulateAllDayGroupsAsync()
         {
             var allDayGroups = await _logService.TryGetAllLoggedDayGroupsAsync(_tracker.Id, _sortOption);
 

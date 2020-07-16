@@ -5,11 +5,13 @@ using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
+[assembly: InternalsVisibleTo("DayTrack.Tests")]
 namespace DayTrack.ViewModels
 {
     public class ImportViewModel : ViewModelBase
@@ -43,7 +45,7 @@ namespace DayTrack.ViewModels
             ImportCommand = new Command(async () => await ImportAsync().ExpressLoading(this));
         }
 
-        private async Task SelectFileAsync()
+        internal async Task SelectFileAsync()
         {
             try
             {
@@ -63,7 +65,7 @@ namespace DayTrack.ViewModels
             }
         }
 
-        private async Task ImportAsync()
+        internal async Task ImportAsync()
         {
             if (SelectedFile == null || SelectedTracker == null)
             {

@@ -2,10 +2,12 @@
 using DayTrack.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
+[assembly: InternalsVisibleTo("DayTrack.Tests")]
 namespace DayTrack.ViewModels
 {
     public class TrackerViewModel : ViewModelBase
@@ -61,7 +63,7 @@ namespace DayTrack.ViewModels
             _ = PopulateAllTrackersAsync();
         }
 
-        private async Task CreateAsync()
+        internal async Task CreateAsync()
         {
             string name = Name.Trim();
 
@@ -84,7 +86,7 @@ namespace DayTrack.ViewModels
             ResetAllValues();
         }
 
-        private async Task UpdateAsync()
+        internal async Task UpdateAsync()
         {
             string name = Name.Trim();
 
@@ -107,7 +109,7 @@ namespace DayTrack.ViewModels
             ResetAllValues();
         }
 
-        private async Task DeleteAsync(Tracker tracker)
+        internal async Task DeleteAsync(Tracker tracker)
         {
             bool successful = await _trackerService.TryDeleteTrackerAsync(tracker.Id);
 
@@ -120,7 +122,7 @@ namespace DayTrack.ViewModels
             await PopulateAllTrackersAsync();
         }
 
-        private async Task PopulateAllTrackersAsync()
+        internal async Task PopulateAllTrackersAsync()
         {
             var allTrackers = await _trackerService.TryGetAllTrackersAsync();
 
