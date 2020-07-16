@@ -14,9 +14,9 @@ namespace DayTrack.ViewModels
     public class TrackerLogViewModel : ViewModelBase
     {
         private DateTime _dateToLog = DateTime.Now.Date;
-        private TrackerLogService.GroupSortOption _sortOption = TrackerLogService.GroupSortOption.DateDescending;
+        private GroupSortOption _sortOption = GroupSortOption.DateDescending;
         private readonly Tracker _tracker;
-        private readonly TrackerLogService _logService;
+        private readonly ITrackerLogService _logService;
 
         public const string DatabaseErrorMessage = "DatabaseError";
 
@@ -29,7 +29,7 @@ namespace DayTrack.ViewModels
         public int SortOptionIndex
         {
             get => (int)_sortOption;
-            set => SetAndRaiseIfChanged(ref _sortOption, (TrackerLogService.GroupSortOption)value);
+            set => SetAndRaiseIfChanged(ref _sortOption, (GroupSortOption)value);
         }
 
         public ObservableCollection<LoggedDay> AllDays { get; } = new ObservableCollection<LoggedDay>();
@@ -39,7 +39,7 @@ namespace DayTrack.ViewModels
         public ICommand PullAllDaysCommand { get; }
         public ICommand PullAllDayGroupsCommand { get; }
 
-        public TrackerLogViewModel(Tracker tracker, TrackerLogService logService)
+        public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService)
         {
             _tracker = tracker;
             _logService = logService;

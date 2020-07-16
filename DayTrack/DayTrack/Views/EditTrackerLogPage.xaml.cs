@@ -32,7 +32,7 @@ namespace DayTrack.Views
 
             using var scope = App.DependencyContainer.BeginLifetimeScope();
             BindingContext = _viewModel =
-                new TrackerLogViewModel(tracker, logService: scope.Resolve<TrackerLogService>());
+                new TrackerLogViewModel(tracker, logService: scope.Resolve<ITrackerLogService>());
         }
 
         private async void OnAppearing(object sender, EventArgs e) =>

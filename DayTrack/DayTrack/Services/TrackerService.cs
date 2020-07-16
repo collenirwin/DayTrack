@@ -13,7 +13,7 @@ namespace DayTrack.Services
     /// <summary>
     /// Contains methods for interaction with the <see cref="Tracker"/> table.
     /// </summary>
-    public class TrackerService
+    public class TrackerService : ITrackerService
     {
         private readonly AppDbContext _context;
         private readonly ILogger _logger;

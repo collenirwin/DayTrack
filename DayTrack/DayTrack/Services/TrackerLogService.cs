@@ -14,18 +14,8 @@ namespace DayTrack.Services
     /// <summary>
     /// Contains methods for interaction with the <see cref="LoggedDay"/> table.
     /// </summary>
-    public class TrackerLogService
+    public class TrackerLogService : ITrackerLogService
     {
-        /// <summary>
-        /// Available sort options for <see cref="TryGetAllLoggedDayGroupsAsync(int, GroupSortOption)"/> results.
-        /// </summary>
-        public enum GroupSortOption
-        {
-            DateDescending,
-            DateAscending,
-            CountDescending
-        }
-
         private readonly AppDbContext _context;
         private readonly ILogger _logger;
 

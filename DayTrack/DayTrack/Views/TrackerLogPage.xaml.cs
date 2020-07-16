@@ -33,7 +33,7 @@ namespace DayTrack.Views
 
             using var scope = App.DependencyContainer.BeginLifetimeScope();
             BindingContext = _viewModel =
-                new TrackerLogViewModel(tracker, logService: scope.Resolve<TrackerLogService>());
+                new TrackerLogViewModel(tracker, logService: scope.Resolve<ITrackerLogService>());
 
             SortOptionPicker.SelectedIndex = 0;
             SortOptionPicker.SelectedIndexChanged += OnSortChange;

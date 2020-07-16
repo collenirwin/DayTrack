@@ -16,7 +16,7 @@ namespace DayTrack.ViewModels
         private string _name = "";
         private string _errorMessage = "";
         private bool _hasError = false;
-        private readonly TrackerService _trackerService;
+        private readonly ITrackerService _trackerService;
 
         public const string AllTrackersPullFailedMessage = "AllTrackersPullFailed";
 
@@ -53,7 +53,7 @@ namespace DayTrack.ViewModels
         public ICommand UpdateCommand { get; }
         public ICommand DeleteCommand { get; }
 
-        public TrackerViewModel(TrackerService trackerService)
+        public TrackerViewModel(ITrackerService trackerService)
         {
             _trackerService = trackerService;
 

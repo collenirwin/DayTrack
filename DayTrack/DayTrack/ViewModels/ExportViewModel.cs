@@ -17,7 +17,7 @@ namespace DayTrack.ViewModels
     public class ExportViewModel : ViewModelBase
     {
         private Tracker _selectedTracker;
-        private readonly TrackerLogService _logService;
+        private readonly ITrackerLogService _logService;
 
         public Tracker SelectedTracker
         {
@@ -28,7 +28,7 @@ namespace DayTrack.ViewModels
         public TrackerViewModel TrackerViewModel { get; }
         public ICommand ExportCommand { get; }
 
-        public ExportViewModel(TrackerLogService logService, TrackerViewModel trackerViewModel)
+        public ExportViewModel(ITrackerLogService logService, TrackerViewModel trackerViewModel)
         {
             _logService = logService;
             TrackerViewModel = trackerViewModel;

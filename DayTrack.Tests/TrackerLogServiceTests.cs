@@ -132,7 +132,7 @@ namespace DayTrack.Tests
 
             // act
             var actual = await service
-                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateDescending);
+                .TryGetAllLoggedDayGroupsAsync(trackerId, GroupSortOption.DateDescending);
             var expected = actual.OrderByDescending(group => group.Date);
 
             // assert
@@ -148,7 +148,7 @@ namespace DayTrack.Tests
 
             // act
             var actual = await service
-                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateAscending);
+                .TryGetAllLoggedDayGroupsAsync(trackerId, GroupSortOption.DateAscending);
             var expected = actual.OrderBy(group => group.Date);
 
             // assert
@@ -164,7 +164,7 @@ namespace DayTrack.Tests
 
             // act
             var actual = await service
-                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.CountDescending);
+                .TryGetAllLoggedDayGroupsAsync(trackerId, GroupSortOption.CountDescending);
             var expected = actual.OrderByDescending(group => group.Count);
 
             // assert
@@ -180,7 +180,7 @@ namespace DayTrack.Tests
 
             // act
             var groups = await service
-                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateDescending);
+                .TryGetAllLoggedDayGroupsAsync(trackerId, GroupSortOption.DateDescending);
             var duplicateDate = groups.First(group => group.Date == new DateTime(2020, 1, 1));
 
             // assert
@@ -197,7 +197,7 @@ namespace DayTrack.Tests
 
             // act
             var groups = await service
-                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateDescending);
+                .TryGetAllLoggedDayGroupsAsync(trackerId, GroupSortOption.DateDescending);
 
             // assert
             Assert.Single(groups);
@@ -212,7 +212,7 @@ namespace DayTrack.Tests
 
             // act
             var groups = await service
-                .TryGetAllLoggedDayGroupsAsync(trackerId, TrackerLogService.GroupSortOption.DateDescending);
+                .TryGetAllLoggedDayGroupsAsync(trackerId, GroupSortOption.DateDescending);
 
             // assert
             Assert.Empty(groups);

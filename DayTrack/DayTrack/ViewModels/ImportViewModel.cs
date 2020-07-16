@@ -18,7 +18,7 @@ namespace DayTrack.ViewModels
     {
         private FileData _selectedFile;
         private Tracker _selectedTracker;
-        private readonly TrackerLogService _logService;
+        private readonly ITrackerLogService _logService;
 
         public FileData SelectedFile
         {
@@ -36,7 +36,7 @@ namespace DayTrack.ViewModels
         public ICommand SelectFileCommand { get; }
         public ICommand ImportCommand { get; }
 
-        public ImportViewModel(TrackerLogService logService, TrackerViewModel trackerViewModel)
+        public ImportViewModel(ITrackerLogService logService, TrackerViewModel trackerViewModel)
         {
             _logService = logService;
             TrackerViewModel = trackerViewModel;
