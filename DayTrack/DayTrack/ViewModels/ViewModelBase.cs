@@ -14,7 +14,7 @@ namespace DayTrack.ViewModels
         /// <summary>
         /// The event fired upon a property change.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
         /// <summary>
         /// Is this view model in a loading state?
