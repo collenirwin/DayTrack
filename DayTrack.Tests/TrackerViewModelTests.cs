@@ -290,5 +290,54 @@ namespace DayTrack.Tests
             // assert
             Assert.Single(vm.AllTrackers, tracker);
         }
+
+        [Fact]
+        public async Task DeleteAsync_NullTracker_DoesNothing()
+        {
+            // arrange
+            var service = new MockTrackerService();
+            service.Trackers.Add(null);
+            var vm = new TrackerViewModel(service);
+
+            // act
+            await vm.DeleteAsync(null);
+
+            // assert
+            Assert.Single(service.Trackers, expected: null);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WithTracker_DeletesTracker()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerService();
+            service.Trackers.Add(tracker);
+            var vm = new TrackerViewModel(service);
+
+            // act
+            await vm.DeleteAsync(tracker);
+
+            // assert
+            Assert.Empty(vm.AllTrackers);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ServiceCallFailure_SendsMessage()
+        {
+            // arrange
+            var vm = new TrackerViewModel(new FailingTrackerService());
+            var tracker = new Tracker();
+
+            bool messageSent = false;
+            MessagingCenter.Subscribe<TrackerViewModel>(this, nameof(vm.DeleteCommand),
+                sender => messageSent = true);
+
+            // act
+            await vm.DeleteAsync(tracker);
+
+            // assert
+            Assert.True(messageSent);
+        }
     }
 }
