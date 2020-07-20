@@ -6,8 +6,13 @@ using Xunit;
 
 namespace DayTrack.Tests
 {
+    /// <summary>
+    /// Tests for <see cref="TrackerViewModel"/> methods.
+    /// </summary>
     public class TrackerViewModelTests
     {
+        #region CreateAsync
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -122,6 +127,10 @@ namespace DayTrack.Tests
             // assert
             Assert.False(messageSent);
         }
+
+        #endregion
+
+        #region UpdateAsync
 
         [Theory]
         [InlineData(null)]
@@ -259,6 +268,10 @@ namespace DayTrack.Tests
             Assert.False(messageSent);
         }
 
+        #endregion
+
+        #region PopulateAllTrackersAsync
+
         [Fact]
         public async Task PopulateAllTrackersAsync_ServiceCallFailure_SendsMessage()
         {
@@ -290,6 +303,10 @@ namespace DayTrack.Tests
             // assert
             Assert.Single(vm.AllTrackers, tracker);
         }
+
+        #endregion
+
+        #region DeleteAsync
 
         [Fact]
         public async Task DeleteAsync_NullTracker_DoesNothing()
@@ -339,5 +356,7 @@ namespace DayTrack.Tests
             // assert
             Assert.True(messageSent);
         }
+
+        #endregion
     }
 }
