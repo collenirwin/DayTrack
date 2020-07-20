@@ -8,6 +8,9 @@ using Xunit;
 
 namespace DayTrack.Tests
 {
+    /// <summary>
+    /// Tests for <see cref="TrackerService"/> methods.
+    /// </summary>
     public class TrackerServiceTests : AppDbContextTestBase
     {
         private readonly ILogger _logger;
@@ -18,6 +21,8 @@ namespace DayTrack.Tests
                 .WriteTo.Debug()
                 .CreateLogger();
         }
+
+        #region TryAddTrackerAsync
 
         [Fact]
         public async Task TryAddTrackerAsync_DuplicateName_ReturnsNull()
@@ -92,6 +97,10 @@ namespace DayTrack.Tests
             Assert.Equal(expected, actual);
         }
 
+        #endregion
+
+        #region TryDeleteTrackerAsync
+
         [Fact]
         public async Task TryDeleteTrackerAsync_NewId_ReturnsFalse()
         {
@@ -149,6 +158,10 @@ namespace DayTrack.Tests
             // assert
             Assert.Empty(days);
         }
+
+        #endregion
+
+        #region TryUpdateTrackerNameAsync
 
         [Fact]
         public async Task TryUpdateTrackerNameAsync_NullName_ReturnsNull()
@@ -227,6 +240,10 @@ namespace DayTrack.Tests
             Assert.NotNull(tracker);
         }
 
+        #endregion
+
+        #region TryGetAllTrackersAsync
+
         [Fact]
         public async Task TryGetAllTrackersAsync_ReturnsAllTrackers()
         {
@@ -239,5 +256,7 @@ namespace DayTrack.Tests
             // assert
             Assert.Equal(TrackerCount, trackers.Count());
         }
+
+        #endregion
     }
 }
