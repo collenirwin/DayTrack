@@ -82,5 +82,44 @@ namespace DayTrack.Tests
             // assert
             Assert.Equal(name, createdTracker?.Name);
         }
+
+        [Fact]
+        public async Task CreateAsync_ServiceCallFailure_HasError()
+        {
+            // arrange
+            string name = "Collen";
+            var vm = new TrackerViewModel(new FailingTrackerService())
+            {
+                Name = name
+            };
+
+            // act
+            await vm.CreateAsync();
+
+            // assert
+            Assert.True(vm.HasError);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("Collen")]
+        public async Task CreateAsync_AnyError_DoesNotSendMessage(string name)
+        {
+            // arrange
+            var vm = new TrackerViewModel(new FailingTrackerService())
+            {
+                Name = name
+            };
+
+            bool messageSent = false;
+            MessagingCenter.Subscribe<TrackerViewModel, Tracker>(this, nameof(vm.CreateCommand),
+                (sender, tracker) => messageSent = true);
+
+            // act
+            await vm.CreateAsync();
+
+            // assert
+            Assert.False(messageSent);
+        }
     }
 }
