@@ -8,8 +8,9 @@ namespace DayTrack.Tests
 {
     public class MockTrackerService : ITrackerService
     {
-        private readonly List<Tracker> _trackers = new List<Tracker>();
         private int _idCount = 1;
+
+        public List<Tracker> Trackers { get; } = new List<Tracker>();
 
         public Task<Tracker> TryAddTrackerAsync(string name)
         {
@@ -19,29 +20,29 @@ namespace DayTrack.Tests
                 Name = name
             };
 
-            _trackers.Add(tracker);
+            Trackers.Add(tracker);
             return Task.FromResult(tracker);
         }
 
 
         public Task<bool> TryDeleteTrackerAsync(int id)
         {
-            var tracker = _trackers.FirstOrDefault(t => t.Id == id);
+            var tracker = Trackers.FirstOrDefault(t => t.Id == id);
 
             if (tracker is null)
             {
                 return Task.FromResult(false);
             }
 
-            _trackers.Remove(tracker);
+            Trackers.Remove(tracker);
             return Task.FromResult(true);
         }
 
-        public Task<IEnumerable<Tracker>> TryGetAllTrackersAsync() => Task.FromResult(_trackers.AsEnumerable());
+        public Task<IEnumerable<Tracker>> TryGetAllTrackersAsync() => Task.FromResult(Trackers.AsEnumerable());
 
         public Task<Tracker> TryUpdateTrackerNameAsync(int id, string name)
         {
-            var tracker = _trackers.FirstOrDefault(t => t.Id == id);
+            var tracker = Trackers.FirstOrDefault(t => t.Id == id);
 
             if (tracker is null)
             {
