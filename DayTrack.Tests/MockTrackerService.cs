@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DayTrack.Tests
 {
+    /// <summary>
+    /// A mock <see cref="ITrackerService"/> implementation backed by a list of trackers.
+    /// </summary>
     public class MockTrackerService : ITrackerService
     {
         private int _idCount = 1;

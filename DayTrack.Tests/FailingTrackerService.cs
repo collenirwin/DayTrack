@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace DayTrack.Tests
 {
+    /// <summary>
+    /// A mock <see cref="ITrackerService"/> implementation in which all Try* methods return their failure value.
+    /// </summary>
     public class FailingTrackerService : ITrackerService
     {
         public Task<Tracker> TryAddTrackerAsync(string name) => Task.FromResult<Tracker>(null);
