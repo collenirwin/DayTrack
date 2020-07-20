@@ -7,6 +7,9 @@ using Xunit;
 
 namespace DayTrack.Tests
 {
+    /// <summary>
+    /// Tests for <see cref="TrackerLogService"/> methods.
+    /// </summary>
     public class TrackerLogServiceTests : AppDbContextTestBase
     {
         private readonly ILogger _logger;
@@ -17,6 +20,8 @@ namespace DayTrack.Tests
                 .WriteTo.Debug()
                 .CreateLogger();
         }
+
+        #region TryLogDayAsync
 
         [Fact]
         public async Task TryLogDayAsync_NewTrackerId_ReturnsFalse()
@@ -63,6 +68,10 @@ namespace DayTrack.Tests
             // assert
             Assert.NotNull(loggedDay);
         }
+
+        #endregion
+
+        #region TryDeleteLoggedDayAsync
 
         [Fact]
         public async Task TryDeleteLoggedDayAsync_NewId_ReturnsFalse()
@@ -122,6 +131,10 @@ namespace DayTrack.Tests
             // assert
             Assert.NotNull(tracker);
         }
+
+        #endregion
+
+        #region TryGetAllLoggedDayGroupsAsync
 
         [Fact]
         public async Task TryGetAllLoggedDayGroupsAsync_DateDescending_IsInDateDescendingOrder()
@@ -218,6 +231,10 @@ namespace DayTrack.Tests
             Assert.Empty(groups);
         }
 
+        #endregion
+
+        #region TryGetAllLoggedDaysAsync
+
         [Fact]
         public async Task TryGetAllLoggedDaysAsync_NewTrackerId_ReturnsEmpty()
         {
@@ -245,6 +262,10 @@ namespace DayTrack.Tests
             // assert
             Assert.Equal(4, loggedDays.Count());
         }
+
+        #endregion
+
+        #region TryBulkAddEntriesAsync
 
         [Fact]
         public async Task TryBulkAddEntriesAsync_NewTrackerId_ReturnsFalse()
@@ -308,5 +329,7 @@ namespace DayTrack.Tests
             // assert
             Assert.Equal(days, loggedDays);
         }
+
+        #endregion
     }
 }
