@@ -10,6 +10,9 @@ using Xamarin.Forms;
 [assembly: InternalsVisibleTo("DayTrack.Tests")]
 namespace DayTrack.ViewModels
 {
+    /// <summary>
+    /// Provides an interface to create, read, update, and delete <see cref="Tracker"/>s.
+    /// </summary>
     public class TrackerViewModel : ViewModelBase
     {
         private int _id = 0;
@@ -18,20 +21,32 @@ namespace DayTrack.ViewModels
         private bool _hasError = false;
         private readonly ITrackerService _trackerService;
 
+        /// <summary>
+        /// Message to subscribe to for notification of tracker pull failure.
+        /// </summary>
         public const string AllTrackersPullFailedMessage = "AllTrackersPullFailed";
 
+        /// <summary>
+        /// The <see cref="Tracker.Id"/> of the tracker we're working with.
+        /// </summary>
         public int Id
         {
             get => _id;
             set => SetAndRaiseIfChanged(ref _id, value);
         }
 
+        /// <summary>
+        /// The <see cref="Tracker.Name"/> of the tracker we're working with.
+        /// </summary>
         public string Name
         {
             get => _name;
             set => SetAndRaiseIfChanged(ref _name, value);
         }
 
+        /// <summary>
+        /// Message for an error that occured during a command's execution.
+        /// </summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -42,15 +57,33 @@ namespace DayTrack.ViewModels
             }
         }
 
+        /// <summary>
+        /// Do we have an <see cref="ErrorMessage"/>?
+        /// </summary>
         public bool HasError
         {
             get => _hasError;
             private set => SetAndRaiseIfChanged(ref _hasError, value);
         }
 
+        /// <summary>
+        /// All <see cref="Tracker"/>s from the database.
+        /// </summary>
         public ObservableCollection<Tracker> AllTrackers { get; } = new ObservableCollection<Tracker>();
+
+        /// <summary>
+        /// Create and add a tracker to the database with the current <see cref="Name"/>.
+        /// </summary>
         public ICommand CreateCommand { get; }
+
+        /// <summary>
+        /// Update the tracker with the current <see cref="Id"/> to have the current <see cref="Name"/>.
+        /// </summary>
         public ICommand UpdateCommand { get; }
+
+        /// <summary>
+        /// Delete a tracker (requires the tracker to delete).
+        /// </summary>
         public ICommand DeleteCommand { get; }
 
         public TrackerViewModel(ITrackerService trackerService)
