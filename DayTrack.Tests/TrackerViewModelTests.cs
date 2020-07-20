@@ -258,5 +258,37 @@ namespace DayTrack.Tests
             // assert
             Assert.False(messageSent);
         }
+
+        [Fact]
+        public async Task PopulateAllTrackersAsync_ServiceCallFailure_SendsMessage()
+        {
+            // arrange
+            var vm = new TrackerViewModel(new FailingTrackerService());
+
+            bool messageSent = false;
+            MessagingCenter.Subscribe<TrackerViewModel>(this, TrackerViewModel.AllTrackersPullFailedMessage,
+                sender => messageSent = true);
+
+            // act
+            await vm.PopulateAllTrackersAsync();
+
+            // assert
+            Assert.True(messageSent);
+        }
+
+        [Fact]
+        public async Task PopulateAllTrackersAsync_ServiceCallFailure_DoesNotClearAllTrackers()
+        {
+            // arrange
+            var vm = new TrackerViewModel(new FailingTrackerService());
+            var tracker = new Tracker { Id = 0, Name = "Collen" };
+            vm.AllTrackers.Add(tracker);
+
+            // act
+            await vm.PopulateAllTrackersAsync();
+
+            // assert
+            Assert.Single(vm.AllTrackers, tracker);
+        }
     }
 }
