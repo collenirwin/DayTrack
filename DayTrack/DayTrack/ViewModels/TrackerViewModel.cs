@@ -65,7 +65,7 @@ namespace DayTrack.ViewModels
 
         internal async Task CreateAsync()
         {
-            string name = Name.Trim();
+            string name = Name?.Trim() ?? "";
 
             if (!name.Any())
             {
@@ -88,7 +88,7 @@ namespace DayTrack.ViewModels
 
         internal async Task UpdateAsync()
         {
-            string name = Name.Trim();
+            string name = Name?.Trim() ?? "";
 
             if (!name.Any())
             {
@@ -111,6 +111,11 @@ namespace DayTrack.ViewModels
 
         internal async Task DeleteAsync(Tracker tracker)
         {
+            if (tracker is null)
+            {
+                return;
+            }
+
             bool successful = await _trackerService.TryDeleteTrackerAsync(tracker.Id);
 
             if (!successful)

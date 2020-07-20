@@ -9,6 +9,7 @@ namespace DayTrack.Tests
     public class TrackerViewModelTests
     {
         [Theory]
+        [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
         [InlineData("\t")]
