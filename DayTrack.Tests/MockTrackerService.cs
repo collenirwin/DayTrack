@@ -26,8 +26,7 @@ namespace DayTrack.Tests
             Trackers.Add(tracker);
             return Task.FromResult(tracker);
         }
-
-
+        
         public Task<bool> TryDeleteTrackerAsync(int id)
         {
             var tracker = Trackers.FirstOrDefault(t => t.Id == id);
