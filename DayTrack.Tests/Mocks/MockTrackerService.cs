@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DayTrack.Tests
+namespace DayTrack.Tests.Mocks
 {
     /// <summary>
     /// A mock <see cref="ITrackerService"/> implementation backed by a list of trackers.

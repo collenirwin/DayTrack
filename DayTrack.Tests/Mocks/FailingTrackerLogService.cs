@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DayTrack.Tests
+namespace DayTrack.Tests.Mocks
 {
     /// <summary>
     /// A mock <see cref="ITrackerLogService"/> implementation in which all Try* methods return their failure value.
