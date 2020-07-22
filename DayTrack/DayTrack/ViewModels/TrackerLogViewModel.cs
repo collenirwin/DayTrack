@@ -67,6 +67,12 @@ namespace DayTrack.ViewModels
         internal async Task DeleteLoggedDayAsync(LoggedDay loggedDay)
         {
             int index = AllDays.IndexOf(loggedDay);
+
+            if (index == -1 || loggedDay is null)
+            {
+                return;
+            }
+
             AllDays.RemoveAt(index);
             bool successful = await _logService.TryDeleteLoggedDayAsync(loggedDay.Id);
 

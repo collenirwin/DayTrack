@@ -47,5 +47,96 @@ namespace DayTrack.Tests
         }
 
         #endregion
+
+        #region DeleteLoggedDayAsync
+
+        [Fact]
+        public async Task DeleteLoggedDayAsync_ExistingDay_DeletesDay()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var day = new LoggedDay { Id = 0, TrackerId = 0 };
+            var service = new MockTrackerLogService();
+            var vm = new TrackerLogViewModel(tracker, service);
+            service.LoggedDays.Add(day);
+            vm.AllDays.Add(day);
+
+            // act
+            await vm.DeleteLoggedDayAsync(day);
+
+            // assert
+            Assert.Empty(vm.AllDays);
+            Assert.Empty(service.LoggedDays);
+        }
+
+        [Fact]
+        public async Task DeleteLoggedDayAsync_NullDay_DoesNothing()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService());
+            vm.AllDays.Add(null);
+
+            // act
+            await vm.DeleteLoggedDayAsync(null);
+
+            // assert
+            Assert.Single(vm.AllDays, expected: null);
+        }
+
+        [Fact]
+        public async Task DeleteLoggedDayAsync_NewDay_DoesNothing()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var newDay = new LoggedDay { Id = 0, TrackerId = 0 };
+            var existingDay = new LoggedDay { Id = 5, TrackerId = 0 };
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService());
+            vm.AllDays.Add(existingDay);
+
+            // act
+            await vm.DeleteLoggedDayAsync(newDay);
+
+            // assert
+            Assert.Single(vm.AllDays, expected: existingDay);
+        }
+
+        [Fact]
+        public async Task DeleteLoggedDayAsync_ServiceFailure_DoesNotDeleteFromAllDays()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var day = new LoggedDay { Id = 0, TrackerId = 0 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            vm.AllDays.Add(day);
+
+            // act
+            await vm.DeleteLoggedDayAsync(day);
+
+            // assert
+            Assert.Single(vm.AllDays, expected: day);
+        }
+
+        [Fact]
+        public async Task DeleteLoggedDayAsync_ServiceFailure_SendsMessageWithDay()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var day = new LoggedDay { Id = 0, TrackerId = 0 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            vm.AllDays.Add(day);
+
+            LoggedDay sentDay = null;
+            MessagingCenter.Subscribe<TrackerLogViewModel, LoggedDay>(this, nameof(vm.DeleteLoggedDayCommand),
+               (sender, loggedDay) => sentDay = loggedDay);
+
+            // act
+            await vm.DeleteLoggedDayAsync(day);
+
+            // assert
+            Assert.Equal(day, sentDay);
+        }
+
+        #endregion
     }
 }
