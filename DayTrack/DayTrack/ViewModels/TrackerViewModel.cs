@@ -19,6 +19,7 @@ namespace DayTrack.ViewModels
         private string _name = "";
         private string _errorMessage = "";
         private bool _hasError = false;
+        private ObservableCollection<Tracker> _allTrackers = new ObservableCollection<Tracker>();
         private readonly ITrackerService _trackerService;
 
         /// <summary>
@@ -69,7 +70,11 @@ namespace DayTrack.ViewModels
         /// <summary>
         /// All <see cref="Tracker"/>s from the database.
         /// </summary>
-        public ObservableCollection<Tracker> AllTrackers { get; } = new ObservableCollection<Tracker>();
+        public ObservableCollection<Tracker> AllTrackers
+        {
+            get => _allTrackers;
+            set => SetAndRaiseIfChanged(ref _allTrackers, value);
+        }
 
         /// <summary>
         /// Create and add a tracker to the database with the current <see cref="Name"/>.
@@ -170,11 +175,7 @@ namespace DayTrack.ViewModels
                 return;
             }
 
-            AllTrackers.Clear();
-            foreach (var tracker in allTrackers)
-            {
-                AllTrackers.Add(tracker);
-            }
+            AllTrackers = new ObservableCollection<Tracker>(allTrackers);
         }
 
         private void ResetAllValues()

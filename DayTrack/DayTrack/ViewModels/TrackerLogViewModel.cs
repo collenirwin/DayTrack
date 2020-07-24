@@ -15,6 +15,8 @@ namespace DayTrack.ViewModels
     {
         private DateTime _dateToLog = DateTime.Now.Date;
         private GroupSortOption _sortOption = GroupSortOption.DateDescending;
+        private ObservableCollection<LoggedDay> _allDays = new ObservableCollection<LoggedDay>();
+        private ObservableCollection<LoggedDayGroup> _allDayGroups = new ObservableCollection<LoggedDayGroup>();
         private readonly Tracker _tracker;
         private readonly ITrackerLogService _logService;
 
@@ -32,8 +34,18 @@ namespace DayTrack.ViewModels
             set => SetAndRaiseIfChanged(ref _sortOption, (GroupSortOption)value);
         }
 
-        public ObservableCollection<LoggedDay> AllDays { get; } = new ObservableCollection<LoggedDay>();
-        public ObservableCollection<LoggedDayGroup> AllDayGroups { get; } = new ObservableCollection<LoggedDayGroup>();
+        public ObservableCollection<LoggedDay> AllDays
+        {
+            get => _allDays;
+            set => SetAndRaiseIfChanged(ref _allDays, value);
+        }
+
+        public ObservableCollection<LoggedDayGroup> AllDayGroups
+        {
+            get => _allDayGroups;
+            set => SetAndRaiseIfChanged(ref _allDayGroups, value);
+        }
+
         public ICommand LogDayCommand { get; }
         public ICommand DeleteLoggedDayCommand { get; }
         public ICommand PullAllDaysCommand { get; }
@@ -93,11 +105,7 @@ namespace DayTrack.ViewModels
                 return;
             }
 
-            AllDays.Clear();
-            foreach (var day in allDays)
-            {
-                AllDays.Add(day);
-            }
+            AllDays = new ObservableCollection<LoggedDay>(allDays);
         }
 
         internal async Task PopulateAllDayGroupsAsync()
@@ -110,11 +118,7 @@ namespace DayTrack.ViewModels
                 return;
             }
 
-            AllDayGroups.Clear();
-            foreach (var group in allDayGroups)
-            {
-                AllDayGroups.Add(group);
-            }
+            AllDayGroups = new ObservableCollection<LoggedDayGroup>(allDayGroups);
         }
     }
 }
