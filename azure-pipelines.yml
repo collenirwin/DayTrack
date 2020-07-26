@@ -38,11 +38,6 @@ steps:
   displayName: 'Run unit tests - $(buildConfiguration)'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    publishTestResults: true
     projects: '**/*.Tests.csproj'
-    
-- script: dotnet test DayTrack.Tests --logger trx --collect "Code coverage"
-- task: PublishTestResults@2
-  inputs:
-    testRunner: xUnit 2
-    testResultsFiles: '**/*.trx'
