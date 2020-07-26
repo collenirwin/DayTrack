@@ -4,10 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 trigger:
-- master
+  branches:
+    include:
+      - master
+      - releases/*
 
 pool:
-  vmImage: 'macos-latest'
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
@@ -20,8 +23,24 @@ steps:
   inputs:
     restoreSolution: '**/*.sln'
 
+- task: DotNetCoreCLI@2
+  displayName: 'Build core project - $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    projects: '**/DayTrack.csproj'
+
 - task: XamarinAndroid@1
+  displayName: 'Build Android project - $(buildConfiguration)'
   inputs:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
+    
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests - $(buildConfiguration)'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    publishTestResults: true
+    projects: '**/*.Tests.csproj'
