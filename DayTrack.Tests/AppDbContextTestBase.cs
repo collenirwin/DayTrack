@@ -1,5 +1,6 @@
 ﻿using DayTrack.Data;
 using DayTrack.Models;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,18 @@ namespace DayTrack.Tests
 {
     public abstract class AppDbContextTestBase : IDisposable
     {
+        private readonly SqliteConnection _connection;
         protected readonly AppDbContext _context;
 
         protected int TrackerCount { get; private set; }
 
-        public AppDbContextTestBase(string name)
+        public AppDbContextTestBase()
         {
+            _connection = new SqliteConnection("Data source=:memory:");
+            _connection.Open();
+
             _context = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
-               .UseSqlite($"Data source={name}.db")
+               .UseSqlite(_connection)
                .Options);
 
             Seed();
@@ -23,7 +28,6 @@ namespace DayTrack.Tests
 
         private void Seed()
         {
-            _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
 
             var trackers = new List<Tracker>
@@ -70,8 +74,8 @@ namespace DayTrack.Tests
 
         public void Dispose()
         {
-            _context.Database.EnsureDeleted();
             _context.Dispose();
+            _connection.Dispose();
         }
     }
 }

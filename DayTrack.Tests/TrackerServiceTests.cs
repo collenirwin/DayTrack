@@ -15,7 +15,7 @@ namespace DayTrack.Tests
     {
         private readonly ILogger _logger;
 
-        public TrackerServiceTests() : base(nameof(TrackerServiceTests))
+        public TrackerServiceTests()
         {
             _logger = new LoggerConfiguration()
                 .WriteTo.Debug()
