@@ -1,6 +1,7 @@
 ﻿using DayTrack.Models;
 using DayTrack.Tests.Mocks;
 using DayTrack.ViewModels;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xunit;
@@ -173,6 +174,44 @@ namespace DayTrack.Tests
 
             // assert
             Assert.Single(vm.AllDays, expected: day);
+        }
+
+        #endregion
+
+        #region PopulateAllDayGroupsAsync
+
+        [Fact]
+        public async Task PopulateAllDayGroupsAsync_ServiceFailure_SendsMessage()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+
+            bool messageSent = false;
+            MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
+               sender => messageSent = true);
+
+            // act
+            await vm.PopulateAllDayGroupsAsync();
+
+            // assert
+            Assert.True(messageSent);
+        }
+
+        [Fact]
+        public async Task PopulateAllDayGroupsAsync_ServiceFailure_DoesNotChangeState()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var group = new LoggedDayGroup { Date = DateTime.Now.Date, Count = 2 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            vm.AllDayGroups.Add(group);
+
+            // act
+            await vm.PopulateAllDayGroupsAsync();
+
+            // assert
+            Assert.Single(vm.AllDayGroups, expected: group);
         }
 
         #endregion
