@@ -7,7 +7,7 @@ trigger:
 - '*'
 
 pool:
-  vmImage: 'macos-latest'
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
@@ -20,7 +20,7 @@ steps:
   inputs:
     restoreSolution: '**/*.sln'
 
-- task: DotNetCoreCLI@1
+- task: DotNetCoreCLI@2
   displayName: 'Build core project - $(buildConfiguration)'
   inputs:
     command: 'build'
@@ -39,5 +39,10 @@ steps:
   inputs:
     command: 'test'
     arguments: '--no-build --configuration $(buildConfiguration)'
-    publishTestResults: true
     projects: '**/*.Tests.csproj'
+    
+- script: dotnet test DayTrack.Tests --logger trx --collect "Code coverage"
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
