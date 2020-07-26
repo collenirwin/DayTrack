@@ -138,5 +138,43 @@ namespace DayTrack.Tests
         }
 
         #endregion
+
+        #region PopulateAllDaysAsync
+
+        [Fact]
+        public async Task PopulateAllDaysAsync_ServiceFailure_SendsMessage()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+
+            bool messageSent = false;
+            MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
+               sender => messageSent = true);
+
+            // act
+            await vm.PopulateAllDaysAsync();
+
+            // assert
+            Assert.True(messageSent);
+        }
+
+        [Fact]
+        public async Task PopulateAllDaysAsync_ServiceFailure_DoesNotChangeState()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var day = new LoggedDay { Id = 0, TrackerId = 0 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            vm.AllDays.Add(day);
+
+            // act
+            await vm.PopulateAllDaysAsync();
+
+            // assert
+            Assert.Single(vm.AllDays, expected: day);
+        }
+
+        #endregion
     }
 }
