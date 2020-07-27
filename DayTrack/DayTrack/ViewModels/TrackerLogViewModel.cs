@@ -20,6 +20,7 @@ namespace DayTrack.ViewModels
         private GroupSortOption _sortOption = GroupSortOption.DateDescending;
         private ObservableCollection<LoggedDay> _allDays = new ObservableCollection<LoggedDay>();
         private ObservableCollection<LoggedDayGroup> _allDayGroups = new ObservableCollection<LoggedDayGroup>();
+        private LoggedDayStats _loggedDayStats;
         private readonly Tracker _tracker;
         private readonly ITrackerLogService _logService;
 
@@ -65,6 +66,15 @@ namespace DayTrack.ViewModels
         }
 
         /// <summary>
+        /// Computed stats for <see cref="AllDays"/>.
+        /// </summary>
+        public LoggedDayStats LoggedDayStats
+        {
+            get => _loggedDayStats;
+            set => SetAndRaiseIfChanged(ref _loggedDayStats, value);
+        }
+
+        /// <summary>
         /// Create a new <see cref="LoggedDay"/> with the current <see cref="DateToLog"/>.
         /// </summary>
         public ICommand LogDayCommand { get; }
@@ -85,6 +95,11 @@ namespace DayTrack.ViewModels
         /// </summary>
         public ICommand PullAllDayGroupsCommand { get; }
 
+        /// <summary>
+        /// Pulls <see cref="AllDays"/>, then computes <see cref="LoggedDayStats"/>.
+        /// </summary>
+        public ICommand PullStatsCommand { get; }
+
         public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService)
         {
             _tracker = tracker;
@@ -95,6 +110,7 @@ namespace DayTrack.ViewModels
                 await DeleteLoggedDayAsync(day as LoggedDay).ExpressLoading(this));
             PullAllDaysCommand = new Command(async () => await PopulateAllDaysAsync().ExpressLoading(this));
             PullAllDayGroupsCommand = new Command(async () => await PopulateAllDayGroupsAsync().ExpressLoading(this));
+            PullStatsCommand = new Command(async () => await PopulateStatsAsync().ExpressLoading(this));
         }
 
         internal async Task<bool> LogDayAsync()
@@ -156,6 +172,20 @@ namespace DayTrack.ViewModels
             }
 
             AllDayGroups = new ObservableCollection<LoggedDayGroup>(allDayGroups);
+            return true;
+        }
+
+        internal async Task<bool> PopulateStatsAsync()
+        {
+            bool successful = await PopulateAllDaysAsync();
+
+            if (!successful)
+            {
+                return false;
+            }
+
+            // TODO: compute stats
+
             return true;
         }
     }
