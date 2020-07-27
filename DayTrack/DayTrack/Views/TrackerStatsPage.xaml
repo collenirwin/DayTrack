@@ -9,36 +9,67 @@
     <ContentPage.Content>
         <StackLayout Margin="10">
             <ActivityIndicator IsVisible="{Binding IsLoading}" />
-            <Label Text="Logs per day" FontSize="Medium" />
-
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
                 <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="First log" HorizontalTextAlignment="Center" />
+                    <Label Text="{Binding LoggedDayStats.First, StringFormat='{0:M/d/yyyy}'}"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Medium" />
+                </StackLayout>
+
+                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="Last log" HorizontalTextAlignment="Center" />
+                    <Label Text="{Binding LoggedDayStats.Last, StringFormat='{0:M/d/yyyy}'}"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Medium" />
+                </StackLayout>
+
+                <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                         Margin="10"
+                         HeightRequest="1"
+                         BackgroundColor="Silver" />
+
+                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                       Text="Per day"
+                       Margin="0, 0, 0, 10"
+                       HorizontalTextAlignment="Center"
+                       FontSize="Medium" />
+
+                <StackLayout Grid.Row="3" Grid.Column="0" HorizontalOptions="Center">
                     <Label Text="Average" />
                     <Label Text="{Binding LoggedDayStats.Average, StringFormat='{0:n1}'}"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium" />
                 </StackLayout>
 
-                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
+                <StackLayout Grid.Row="3" Grid.Column="1" HorizontalOptions="Center">
                     <Label Text="Median" HorizontalTextAlignment="Center" />
                     <Label Text="{Binding LoggedDayStats.Median}"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium" />
                 </StackLayout>
 
-                <StackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="Center">
+                <StackLayout Grid.Row="4" Grid.Column="0" HorizontalOptions="Center">
                     <Label Text="Minimum (non-zero)" HorizontalTextAlignment="Center" />
                     <Label Text="{Binding LoggedDayStats.Min}"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium" />
                 </StackLayout>
 
-                <StackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="Center">
+                <StackLayout Grid.Row="4" Grid.Column="1" HorizontalOptions="Center">
                     <Label Text="Maximum" HorizontalTextAlignment="Center" />
                     <Label Text="{Binding LoggedDayStats.Max}"
                            HorizontalTextAlignment="Center"

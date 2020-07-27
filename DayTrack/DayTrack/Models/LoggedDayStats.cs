@@ -1,4 +1,6 @@
-﻿namespace DayTrack.Models
+﻿using System;
+
+namespace DayTrack.Models
 {
     /// <summary>
     /// Contains stats regarding the frequency of days logged under a tracker.
@@ -24,5 +26,15 @@
         /// The median logs/day.
         /// </summary>
         public int Median { get; set; }
+
+        /// <summary>
+        /// The date of the first log entry.
+        /// </summary>
+        public DateTime First { get; set; }
+
+        /// <summary>
+        /// The date of the last log entry.
+        /// </summary>
+        public DateTime Last { get; set; }
     }
 }

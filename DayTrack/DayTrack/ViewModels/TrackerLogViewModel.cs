@@ -186,7 +186,9 @@ namespace DayTrack.ViewModels
                 return false;
             }
 
-            double totalDays = (int)(AllDays.First().Date.Date - AllDays.Last().Date.Date).TotalDays + 1;
+            var first = AllDays.Last().Date.Date;
+            var last = AllDays.First().Date.Date;
+            double totalDays = (int)(last - first).TotalDays + 1;
             
             int medianIndex = AllDayGroups.Count / 2;
             if (AllDayGroups.Count % 2 == 0)
@@ -199,7 +201,9 @@ namespace DayTrack.ViewModels
                 Average = AllDays.Count / totalDays,
                 Min = AllDayGroups.Min(group => group.Count),
                 Max = AllDayGroups.Max(group => group.Count),
-                Median = AllDayGroups[medianIndex].Count
+                Median = AllDayGroups[medianIndex].Count,
+                First = first,
+                Last = last
             };
 
             return true;
