@@ -2,6 +2,7 @@
 using DayTrack.Tests.Mocks;
 using DayTrack.ViewModels;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xunit;
@@ -212,6 +213,180 @@ namespace DayTrack.Tests
 
             // assert
             Assert.Single(vm.AllDayGroups, expected: group);
+        }
+
+        #endregion
+
+        #region PopulateStatsAsync
+
+        [Fact]
+        public async Task PopulateStatsAsync_ServiceFailure_SendsMessage()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+
+            bool messageSent = false;
+            MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
+               sender => messageSent = true);
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.True(messageSent);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_ServiceFailure_DoesNotComputeStats()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Null(vm.LoggedDayStats);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_NoLoggedDays_DoesNotComputeStats()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService());
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Null(vm.LoggedDayStats);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_NullAllDayGroups_DoesNotComputeStats()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService())
+            {
+                AllDayGroups = null
+            };
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Null(vm.LoggedDayStats);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_WithLoggedDays_ComputesCorrectMin()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerLogService();
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            var vm = new TrackerLogViewModel(tracker, service);
+            await vm.PopulateAllDayGroupsAsync();
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Equal(1, vm.LoggedDayStats.Min);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_WithLoggedDays_ComputesCorrectMax()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerLogService();
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            var vm = new TrackerLogViewModel(tracker, service);
+            await vm.PopulateAllDayGroupsAsync();
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Equal(2, vm.LoggedDayStats.Max);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_WithLoggedDays_ComputesCorrectAverage()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerLogService();
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 2) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 3) });
+            var vm = new TrackerLogViewModel(tracker, service);
+            await vm.PopulateAllDayGroupsAsync();
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Equal(1.0, vm.LoggedDayStats.Average);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_OddLoggedDays_ComputesCorrectMedian()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerLogService();
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2001, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            var vm = new TrackerLogViewModel(tracker, service);
+            await vm.PopulateAllDayGroupsAsync();
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Equal(1, vm.LoggedDayStats.Median);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_EvenLoggedDays_ComputesCorrectMedian()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerLogService();
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2001, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2001, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2001, 1, 1) });
+
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
+
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2003, 1, 1) });
+            var vm = new TrackerLogViewModel(tracker, service);
+            await vm.PopulateAllDayGroupsAsync();
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Equal(3, vm.LoggedDayStats.Median);
         }
 
         #endregion

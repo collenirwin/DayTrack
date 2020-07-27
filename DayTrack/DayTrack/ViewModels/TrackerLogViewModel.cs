@@ -186,7 +186,7 @@ namespace DayTrack.ViewModels
                 return false;
             }
 
-            var totalDays = (AllDays.First().Date.Date - AllDays.Last().Date.Date).TotalDays;
+            int totalDays = (int)(AllDays.First().Date.Date - AllDays.Last().Date.Date).TotalDays + 1;
             
             int medianIndex = AllDayGroups.Count / 2;
             if (AllDayGroups.Count % 2 == 0)
