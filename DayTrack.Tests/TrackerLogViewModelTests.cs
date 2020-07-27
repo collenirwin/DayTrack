@@ -321,7 +321,7 @@ namespace DayTrack.Tests
         }
 
         [Fact]
-        public async Task PopulateStatsAsync_WithLoggedDays_ComputesCorrectAverage()
+        public async Task PopulateStatsAsync_OnePerDay_ComputesCorrectAverage()
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
@@ -337,6 +337,24 @@ namespace DayTrack.Tests
 
             // assert
             Assert.Equal(1.0, vm.LoggedDayStats.Average);
+        }
+
+        [Fact]
+        public async Task PopulateStatsAsync_HalfOfDays_ComputesCorrectAverage()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerLogService();
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 4) });
+            var vm = new TrackerLogViewModel(tracker, service);
+            await vm.PopulateAllDayGroupsAsync();
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Equal(0.5, vm.LoggedDayStats.Average);
         }
 
         [Fact]
