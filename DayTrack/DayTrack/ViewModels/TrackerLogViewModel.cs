@@ -97,26 +97,26 @@ namespace DayTrack.ViewModels
             PullAllDayGroupsCommand = new Command(async () => await PopulateAllDayGroupsAsync().ExpressLoading(this));
         }
 
-        internal async Task LogDayAsync()
+        internal async Task<bool> LogDayAsync()
         {
             bool successful = await _logService.TryLogDayAsync(DateToLog, _tracker.Id);
 
             if (!successful)
             {
                 MessagingCenter.Send(this, DatabaseErrorMessage);
-                return;
+                return false;
             }
 
-            await PopulateAllDayGroupsAsync();
+            return await PopulateAllDayGroupsAsync();
         }
 
-        internal async Task DeleteLoggedDayAsync(LoggedDay loggedDay)
+        internal async Task<bool> DeleteLoggedDayAsync(LoggedDay loggedDay)
         {
             int index = AllDays.IndexOf(loggedDay);
 
             if (index == -1 || loggedDay is null)
             {
-                return;
+                return false;
             }
 
             AllDays.RemoveAt(index);
@@ -127,32 +127,36 @@ namespace DayTrack.ViewModels
                 MessagingCenter.Send(this, nameof(DeleteLoggedDayCommand), loggedDay);
                 AllDays.Insert(index, loggedDay);
             }
+
+            return successful;
         }
 
-        internal async Task PopulateAllDaysAsync()
+        internal async Task<bool> PopulateAllDaysAsync()
         {
             var allDays = await _logService.TryGetAllLoggedDaysAsync(_tracker.Id);
 
             if (allDays == null)
             {
                 MessagingCenter.Send(this, DatabaseErrorMessage);
-                return;
+                return false;
             }
 
             AllDays = new ObservableCollection<LoggedDay>(allDays);
+            return true;
         }
 
-        internal async Task PopulateAllDayGroupsAsync()
+        internal async Task<bool> PopulateAllDayGroupsAsync()
         {
             var allDayGroups = await _logService.TryGetAllLoggedDayGroupsAsync(_tracker.Id, _sortOption);
 
             if (allDayGroups == null)
             {
                 MessagingCenter.Send(this, DatabaseErrorMessage);
-                return;
+                return false;
             }
 
             AllDayGroups = new ObservableCollection<LoggedDayGroup>(allDayGroups);
+            return true;
         }
     }
 }
