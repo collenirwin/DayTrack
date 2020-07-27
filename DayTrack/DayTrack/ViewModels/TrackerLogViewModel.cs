@@ -3,6 +3,7 @@ using DayTrack.Services;
 using DayTrack.Utils;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -179,12 +180,27 @@ namespace DayTrack.ViewModels
         {
             bool successful = await PopulateAllDaysAsync();
 
-            if (!successful)
+            if (!successful || AllDayGroups is null || !AllDays.Any())
             {
+                MessagingCenter.Send(this, DatabaseErrorMessage);
                 return false;
             }
 
-            // TODO: compute stats
+            var totalDays = (AllDays.First().Date.Date - AllDays.Last().Date.Date).TotalDays;
+            
+            int medianIndex = AllDayGroups.Count / 2;
+            if (AllDayGroups.Count % 2 == 0)
+            {
+                medianIndex--;
+            }
+
+            LoggedDayStats = new LoggedDayStats
+            {
+                Average = totalDays / AllDays.Count,
+                Min = AllDayGroups.Min(group => group.Count),
+                Max = AllDayGroups.Max(group => group.Count),
+                Median = AllDayGroups[medianIndex].Count
+            };
 
             return true;
         }
