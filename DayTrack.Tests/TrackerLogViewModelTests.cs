@@ -358,6 +358,23 @@ namespace DayTrack.Tests
         }
 
         [Fact]
+        public async Task PopulateStatsAsync_OneDay_ComputesCorrectAverage()
+        {
+            // arrange
+            var tracker = new Tracker { Id = 0 };
+            var service = new MockTrackerLogService();
+            service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
+            var vm = new TrackerLogViewModel(tracker, service);
+            await vm.PopulateAllDayGroupsAsync();
+
+            // act
+            await vm.PopulateStatsAsync();
+
+            // assert
+            Assert.Equal(1.0, vm.LoggedDayStats.Average);
+        }
+
+        [Fact]
         public async Task PopulateStatsAsync_OddLoggedDays_ComputesCorrectMedian()
         {
             // arrange
