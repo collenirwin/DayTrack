@@ -3,12 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms" 
              mc:Ignorable="d"
              x:Class="DayTrack.Views.TrackerStatsPage"
              Appearing="OnAppearing">
     <ContentPage.Content>
         <StackLayout Margin="10">
             <ActivityIndicator IsVisible="{Binding IsLoading}" />
+
+            <Label Text="Last two weeks" FontSize="Medium" HorizontalTextAlignment="Center" />
+            <microcharts:ChartView x:Name="ChartView" HeightRequest="200" Margin="10" />
+            
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
