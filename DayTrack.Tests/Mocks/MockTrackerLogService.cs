@@ -53,7 +53,7 @@ namespace DayTrack.Tests.Mocks
         }
 
         public Task<IEnumerable<LoggedDay>> TryGetAllLoggedDaysAsync(int trackerId) =>
-            Task.FromResult(LoggedDays.AsEnumerable());
+            Task.FromResult(LoggedDays.OrderByDescending(day => day.Date).AsEnumerable());
 
         public Task<bool> TryLogDayAsync(DateTime day, int trackerId)
         {

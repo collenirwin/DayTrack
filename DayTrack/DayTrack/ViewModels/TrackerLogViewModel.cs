@@ -3,6 +3,7 @@ using DayTrack.Services;
 using DayTrack.Utils;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace DayTrack.ViewModels
         private GroupSortOption _sortOption = GroupSortOption.DateDescending;
         private ObservableCollection<LoggedDay> _allDays = new ObservableCollection<LoggedDay>();
         private ObservableCollection<LoggedDayGroup> _allDayGroups = new ObservableCollection<LoggedDayGroup>();
+        private LoggedDayStats _loggedDayStats;
         private readonly Tracker _tracker;
         private readonly ITrackerLogService _logService;
 
@@ -65,6 +67,15 @@ namespace DayTrack.ViewModels
         }
 
         /// <summary>
+        /// Computed stats for <see cref="AllDays"/>.
+        /// </summary>
+        public LoggedDayStats LoggedDayStats
+        {
+            get => _loggedDayStats;
+            set => SetAndRaiseIfChanged(ref _loggedDayStats, value);
+        }
+
+        /// <summary>
         /// Create a new <see cref="LoggedDay"/> with the current <see cref="DateToLog"/>.
         /// </summary>
         public ICommand LogDayCommand { get; }
@@ -85,6 +96,11 @@ namespace DayTrack.ViewModels
         /// </summary>
         public ICommand PullAllDayGroupsCommand { get; }
 
+        /// <summary>
+        /// Pulls <see cref="AllDays"/>, then computes <see cref="LoggedDayStats"/>.
+        /// </summary>
+        public ICommand PullStatsCommand { get; }
+
         public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService)
         {
             _tracker = tracker;
@@ -95,28 +111,29 @@ namespace DayTrack.ViewModels
                 await DeleteLoggedDayAsync(day as LoggedDay).ExpressLoading(this));
             PullAllDaysCommand = new Command(async () => await PopulateAllDaysAsync().ExpressLoading(this));
             PullAllDayGroupsCommand = new Command(async () => await PopulateAllDayGroupsAsync().ExpressLoading(this));
+            PullStatsCommand = new Command(async () => await PopulateStatsAsync().ExpressLoading(this));
         }
 
-        internal async Task LogDayAsync()
+        internal async Task<bool> LogDayAsync()
         {
             bool successful = await _logService.TryLogDayAsync(DateToLog, _tracker.Id);
 
             if (!successful)
             {
                 MessagingCenter.Send(this, DatabaseErrorMessage);
-                return;
+                return false;
             }
 
-            await PopulateAllDayGroupsAsync();
+            return await PopulateAllDayGroupsAsync();
         }
 
-        internal async Task DeleteLoggedDayAsync(LoggedDay loggedDay)
+        internal async Task<bool> DeleteLoggedDayAsync(LoggedDay loggedDay)
         {
             int index = AllDays.IndexOf(loggedDay);
 
             if (index == -1 || loggedDay is null)
             {
-                return;
+                return false;
             }
 
             AllDays.RemoveAt(index);
@@ -127,32 +144,69 @@ namespace DayTrack.ViewModels
                 MessagingCenter.Send(this, nameof(DeleteLoggedDayCommand), loggedDay);
                 AllDays.Insert(index, loggedDay);
             }
+
+            return successful;
         }
 
-        internal async Task PopulateAllDaysAsync()
+        internal async Task<bool> PopulateAllDaysAsync()
         {
             var allDays = await _logService.TryGetAllLoggedDaysAsync(_tracker.Id);
 
             if (allDays == null)
             {
                 MessagingCenter.Send(this, DatabaseErrorMessage);
-                return;
+                return false;
             }
 
             AllDays = new ObservableCollection<LoggedDay>(allDays);
+            return true;
         }
 
-        internal async Task PopulateAllDayGroupsAsync()
+        internal async Task<bool> PopulateAllDayGroupsAsync()
         {
             var allDayGroups = await _logService.TryGetAllLoggedDayGroupsAsync(_tracker.Id, _sortOption);
 
             if (allDayGroups == null)
             {
                 MessagingCenter.Send(this, DatabaseErrorMessage);
-                return;
+                return false;
             }
 
             AllDayGroups = new ObservableCollection<LoggedDayGroup>(allDayGroups);
+            return true;
+        }
+
+        internal async Task<bool> PopulateStatsAsync()
+        {
+            bool successful = await PopulateAllDaysAsync();
+
+            if (!successful || AllDayGroups is null || !AllDays.Any())
+            {
+                MessagingCenter.Send(this, DatabaseErrorMessage);
+                return false;
+            }
+
+            var first = AllDays.Last().Date.Date;
+            var last = AllDays.First().Date.Date;
+            double totalDays = (int)(last - first).TotalDays + 1;
+            
+            int medianIndex = AllDayGroups.Count / 2;
+            if (AllDayGroups.Count % 2 == 0)
+            {
+                medianIndex--;
+            }
+
+            LoggedDayStats = new LoggedDayStats
+            {
+                Average = AllDays.Count / totalDays,
+                Min = AllDayGroups.Min(group => group.Count),
+                Max = AllDayGroups.Max(group => group.Count),
+                Median = AllDayGroups[medianIndex].Count,
+                First = first,
+                Last = last
+            };
+
+            return true;
         }
     }
 }

@@ -39,8 +39,11 @@ namespace DayTrack.Views
             SortOptionPicker.SelectedIndexChanged += OnSortChange;
         }
 
-        private async void OnEditEntries(object sender, EventArgs e) =>
+        private async void OnEditEntriesClick(object sender, EventArgs e) =>
             await App.Conductor.Detail.Navigation.PushAsync(new EditTrackerLogPage(_tracker));
+
+        private async void OnStatsClick(object sender, EventArgs e) =>
+            await App.Conductor.Detail.Navigation.PushAsync(new TrackerStatsPage(_tracker, _viewModel));
 
         private async void OnAppearing(object sender, EventArgs e) =>
             await Task.Run(() => _viewModel.PullAllDayGroupsCommand.Execute(null));

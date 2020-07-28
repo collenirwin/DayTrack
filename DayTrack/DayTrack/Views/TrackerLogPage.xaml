@@ -8,7 +8,9 @@
              Appearing="OnAppearing">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Edit Entries"
-                     Clicked="OnEditEntries" />
+                     Clicked="OnEditEntriesClick" />
+        <ToolbarItem Text="Stats"
+                     Clicked="OnStatsClick" />
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
