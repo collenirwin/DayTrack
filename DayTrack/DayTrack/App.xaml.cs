@@ -29,9 +29,7 @@ namespace DayTrack
                     rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            string databasePath = Path
-                .Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "app.db");
-
+            string databasePath = Path.Combine(FileSystem.AppDataDirectory, "app.db");
             var context = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
                 .UseSqlite($"Data source={databasePath}")
                 .Options);
