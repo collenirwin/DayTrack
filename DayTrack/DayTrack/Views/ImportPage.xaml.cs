@@ -1,5 +1,4 @@
-﻿using Autofac;
-using DayTrack.Models;
+﻿using DayTrack.Models;
 using DayTrack.Utils;
 using DayTrack.ViewModels;
 using System;
@@ -14,11 +13,7 @@ namespace DayTrack.Views
         public ImportPage()
         {
             InitializeComponent();
-
-            using (var scope = App.DependencyContainer.BeginLifetimeScope())
-            {
-                BindingContext = scope.Resolve<ImportViewModel>();
-            }
+            BindingContext = App.DependencyContainer.GetInstance<ImportViewModel>();
 
             MessagingCenter.Subscribe<ImportViewModel, Exception>(this, nameof(ImportViewModel.SelectFileCommand),
                 (sender, ex) => this.DisplayAlertOnMain(title: "Error",

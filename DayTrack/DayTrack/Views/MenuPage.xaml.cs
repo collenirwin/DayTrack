@@ -1,5 +1,4 @@
-﻿using Autofac;
-using DayTrack.Models;
+﻿using DayTrack.Models;
 using DayTrack.Utils;
 using DayTrack.ViewModels;
 using DayTrack.Views.Models;
@@ -29,8 +28,7 @@ namespace DayTrack.Views
                     message: "Failed to delete the tracker.",
                     cancel: "OK"));
 
-            using var scope = App.DependencyContainer.BeginLifetimeScope();
-            BindingContext = _viewModel = scope.Resolve<TrackerViewModel>();
+            BindingContext = _viewModel = App.DependencyContainer.GetInstance<TrackerViewModel>();
         }
 
         private async void OnTrackerDelete(object sender, EventArgs e)

@@ -1,11 +1,10 @@
-﻿using Autofac;
-using DayTrack.Data;
+﻿using DayTrack.Data;
 using DayTrack.Services;
 using DayTrack.ViewModels;
 using DayTrack.Views;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using System;
+using SimpleInjector;
 using System.IO;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -15,14 +14,12 @@ namespace DayTrack
     public partial class App : Application
     {
         public static ConductorPage Conductor => Current.MainPage as ConductorPage;
-        public static IContainer DependencyContainer { get; private set; }
+        public static Container DependencyContainer { get; private set; }
 
         public App()
         {
             InitializeComponent();
             VersionTracking.Track();
-
-            var builder = new ContainerBuilder();
 
             var logger = new LoggerConfiguration()
                 .WriteTo.File(Path.Combine(FileSystem.AppDataDirectory, "log.txt"),
@@ -36,15 +33,15 @@ namespace DayTrack
 
             context.Database.Migrate();
 
-            builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
-            builder.RegisterInstance(context).SingleInstance();
-            builder.RegisterType<TrackerService>().As<ITrackerService>().SingleInstance();
-            builder.RegisterType<TrackerLogService>().As<ITrackerLogService>().SingleInstance();
-            builder.RegisterType<TrackerViewModel>().SingleInstance();
-            builder.RegisterType<ImportViewModel>().SingleInstance();
-            builder.RegisterType<ExportViewModel>().SingleInstance();
+            DependencyContainer = new Container();
+            DependencyContainer.RegisterSingleton<ILogger>(() => logger);
+            DependencyContainer.RegisterSingleton(() => context);
+            DependencyContainer.RegisterSingleton<ITrackerService, TrackerService>();
+            DependencyContainer.RegisterSingleton<ITrackerLogService, TrackerLogService>();
+            DependencyContainer.RegisterSingleton<TrackerViewModel>();
+            DependencyContainer.RegisterSingleton<ImportViewModel>();
+            DependencyContainer.RegisterSingleton<ExportViewModel>();
 
-            DependencyContainer = builder.Build();
             MainPage = new ConductorPage();
         }
     }
