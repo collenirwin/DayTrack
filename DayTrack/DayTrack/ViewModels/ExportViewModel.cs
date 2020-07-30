@@ -2,14 +2,15 @@
 using DayTrack.Services;
 using DayTrack.Utils;
 using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
+using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 
 [assembly: InternalsVisibleTo("DayTrack.Tests")]
 namespace DayTrack.ViewModels
@@ -56,8 +57,7 @@ namespace DayTrack.ViewModels
             }
 
             string fileName = $"daytracker_{SelectedTracker.Name}.txt";
-            string path = Path
-                .Combine(DependencyService.Get<IPlatformPathService>().DownloadsFolderPath, fileName);
+            string path = Path.Combine(FileSystem.CacheDirectory, fileName);
 
             var dates = (await _logService.TryGetAllLoggedDaysAsync(SelectedTracker.Id))?
                 .Select(day => day.Date.ToShortDateString());
@@ -71,6 +71,12 @@ namespace DayTrack.ViewModels
             try
             {
                 File.WriteAllText(path, string.Join("\n", dates));
+
+                await Share.RequestAsync(new ShareFileRequest
+                {
+                    Title = $"{SelectedTracker.Name} export",
+                    File = new ShareFile(path)
+                });
             }
             catch (Exception ex)
             {
@@ -78,7 +84,6 @@ namespace DayTrack.ViewModels
                 return;
             }
             
-            MessagingCenter.Send(this, nameof(ExportCommand), fileName);
             ResetAllValues();
         }
 

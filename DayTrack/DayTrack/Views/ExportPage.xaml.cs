@@ -28,11 +28,6 @@ namespace DayTrack.Views
                 (sender, ex) => this.DisplayAlertOnMain(title: "Error",
                     message: $"Error when saving to export file: {ex.Message}",
                     cancel: "OK"));
-
-            MessagingCenter.Subscribe<ExportViewModel, string>(this, nameof(ExportViewModel.ExportCommand),
-                (sender, fileName) => this.DisplayAlertOnMain(title: "Success",
-                    message: $"Export complete (file name: {fileName}).",
-                    cancel: "OK"));
         }
     }
 }
