@@ -1,5 +1,4 @@
-﻿using Autofac;
-using DayTrack.Models;
+﻿using DayTrack.Models;
 using DayTrack.Services;
 using DayTrack.Utils;
 using DayTrack.ViewModels;
@@ -30,9 +29,8 @@ namespace DayTrack.Views
         {
             Title = $"Editing {tracker.Name}";
 
-            using var scope = App.DependencyContainer.BeginLifetimeScope();
-            BindingContext = _viewModel =
-                new TrackerLogViewModel(tracker, logService: scope.Resolve<ITrackerLogService>());
+            BindingContext = _viewModel = new TrackerLogViewModel(tracker,
+                logService: App.DependencyContainer.GetInstance<ITrackerLogService>());
         }
 
         private async void OnAppearing(object sender, EventArgs e) =>

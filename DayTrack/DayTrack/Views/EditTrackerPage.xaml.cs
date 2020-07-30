@@ -1,5 +1,4 @@
-﻿using Autofac;
-using DayTrack.Models;
+﻿using DayTrack.Models;
 using DayTrack.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,10 +13,7 @@ namespace DayTrack.Views
             InitializeComponent();
 
             TrackerViewModel viewModel;
-            using (var scope = App.DependencyContainer.BeginLifetimeScope())
-            {
-                BindingContext = viewModel = scope.Resolve<TrackerViewModel>();
-            }
+            BindingContext = viewModel = App.DependencyContainer.GetInstance<TrackerViewModel>();
 
             viewModel.Id = tracker.Id;
             viewModel.Name = tracker.Name;

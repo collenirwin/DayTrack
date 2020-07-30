@@ -1,5 +1,4 @@
-﻿using Autofac;
-using DayTrack.Utils;
+﻿using DayTrack.Utils;
 using DayTrack.ViewModels;
 using System;
 using Xamarin.Forms;
@@ -13,11 +12,7 @@ namespace DayTrack.Views
         public ExportPage()
         {
             InitializeComponent();
-
-            using (var scope = App.DependencyContainer.BeginLifetimeScope())
-            {
-                BindingContext = scope.Resolve<ExportViewModel>();
-            }
+            BindingContext = App.DependencyContainer.GetInstance<ExportViewModel>();
 
             MessagingCenter.Subscribe<ExportViewModel>(this, nameof(ExportViewModel.ExportCommand),
                 sender => this.DisplayAlertOnMain(title: "Error",
