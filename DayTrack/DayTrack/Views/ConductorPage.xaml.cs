@@ -2,6 +2,7 @@
 using DayTrack.Views.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace DayTrack.Views
@@ -46,6 +47,16 @@ namespace DayTrack.Views
             if (newPage != null && newPage != Detail)
             {
                 Detail = newPage;
+
+                if (Detail.Navigation.ModalStack.Any())
+                {
+                    Device.BeginInvokeOnMainThread(() => Detail.Navigation.PopModalAsync());
+                }
+
+                if (Detail.Navigation.NavigationStack.Any())
+                {
+                    Device.BeginInvokeOnMainThread(() => Detail.Navigation.PopToRootAsync());
+                }
             }
 
             IsPresented = keepMenuOpen;
