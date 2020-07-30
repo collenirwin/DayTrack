@@ -84,7 +84,6 @@ namespace DayTrack.ViewModels
                 return;
             }
             
-            MessagingCenter.Send(this, nameof(ExportCommand), fileName);
             ResetAllValues();
         }
 
