@@ -12,7 +12,7 @@
             <Label Text="Tracker to export" FontSize="Medium" />
 
             <ListView ItemsSource="{Binding TrackerViewModel.AllTrackers}"
-                      SelectedItem="{Binding SelectedTracker}">
+                      SelectedItem="{Binding SelectedTracker, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding Name}" />
