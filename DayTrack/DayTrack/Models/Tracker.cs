@@ -28,11 +28,6 @@ namespace DayTrack.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The days logged under this tracker.
-        /// </summary>
-        public ICollection<LoggedDay> LoggedDays { get; set; }
-
-        /// <summary>
         /// Creation timestamp.
         /// </summary>
         public DateTime Created { get; set; } = DateTime.Now;

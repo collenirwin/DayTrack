@@ -56,8 +56,12 @@ namespace DayTrack.Services
 
         private async Task DeleteTrackerAsync(int id)
         {
-            var tracker = await _context.Table<Tracker>().FirstAsync(t => t.Id == id);
-            await _context.DeleteAsync(tracker);
+            await _context.RunInTransactionAsync(connection =>
+            {
+                var tracker = connection.Table<Tracker>().First(t => t.Id == id);
+                connection.Delete(tracker);
+                connection.Execute("DELETE FROM LoggedDays WHERE TrackerId = ?", id);
+            });
         }
 
         /// <summary>

@@ -24,12 +24,16 @@ namespace DayTrack.Services
             _logger = logger;
         }
 
-        private async Task LogDayAsync(DateTime day, int trackerId) =>
+        private async Task LogDayAsync(DateTime day, int trackerId)
+        {
+            await AssertTrackerExistsAsync(trackerId);
+
             await _context.InsertAsync(new LoggedDay
             {
                 TrackerId = trackerId,
                 Date = day
             });
+        }
 
         /// <summary>
         /// Adds a new <see cref="LoggedDay"/> to the database with the given date and under the given tracker.
@@ -110,6 +114,8 @@ namespace DayTrack.Services
 
         private async Task BulkAddEntriesAsync(IEnumerable<DateTime> days, int trackerId)
         {
+            await AssertTrackerExistsAsync(trackerId);
+
             var loggedDays = days.Select(day => new LoggedDay
             {
                 TrackerId = trackerId,
@@ -128,5 +134,15 @@ namespace DayTrack.Services
         public async Task<bool> TryBulkAddEntriesAsync(IEnumerable<DateTime> days, int trackerId) =>
             await Try.RunAsync(async () => await BulkAddEntriesAsync(days, trackerId),
                 ex => _logger.Error(ex, $"Bulk insert operation failed (tracker id: {trackerId})."));
+
+        private async Task AssertTrackerExistsAsync(int trackerId)
+        {
+            int count = await _context.Table<Tracker>().CountAsync(tracker => tracker.Id == trackerId);
+
+            if (count == 0)
+            {
+                throw new ArgumentException("No tracker exists with the passed id.", nameof(trackerId));
+            }
+        }
     }
 }

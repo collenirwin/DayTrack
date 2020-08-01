@@ -28,11 +28,6 @@ namespace DayTrack.Models
         public int TrackerId { get; set; }
 
         /// <summary>
-        /// Tracker this day is logged under.
-        /// </summary>
-        public Tracker Tracker { get; set; }
-
-        /// <summary>
         /// The day logged.
         /// </summary>
         [DataType(DataType.Date)]
