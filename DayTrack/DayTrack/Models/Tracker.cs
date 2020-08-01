@@ -24,6 +24,7 @@ namespace DayTrack.Models
         /// <summary>
         /// The name of this tracker.
         /// </summary>
+        [Indexed(Unique = true)]
         public string Name { get; set; }
 
         /// <summary>

@@ -1,11 +1,10 @@
 ﻿using DayTrack.Data;
 using DayTrack.Models;
 using DayTrack.Utils;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
+using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DayTrack.Services
@@ -15,12 +14,12 @@ namespace DayTrack.Services
     /// </summary>
     public class TrackerService : ITrackerService
     {
-        private readonly AppDbContext _context;
+        private readonly SQLiteAsyncConnection _context;
         private readonly ILogger _logger;
 
-        public TrackerService(AppDbContext context, ILogger logger)
+        public TrackerService(AppDatabase database, ILogger logger)
         {
-            _context = context;
+            _context = database.Connection;
             _logger = logger;
         }
 
@@ -29,8 +28,7 @@ namespace DayTrack.Services
             name = name ?? throw new ArgumentNullException(nameof(name));
 
             var tracker = new Tracker { Name = name };
-            _context.Trackers.Add(tracker);
-            await _context.SaveChangesAsync();
+            await _context.InsertAsync(tracker);
             return tracker;
         }
 
@@ -44,7 +42,7 @@ namespace DayTrack.Services
                 ex => _logger.Error(ex, $"Failed to add tracker with name {name}."));
 
         private async Task<IEnumerable<Tracker>> GetAllTrackersAsync() =>
-            await _context.Trackers
+            await _context.Table<Tracker>()
                 .OrderBy(tracker => tracker.Name)
                 .ToListAsync();
 
@@ -58,9 +56,8 @@ namespace DayTrack.Services
 
         private async Task DeleteTrackerAsync(int id)
         {
-            var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
-            _context.Trackers.Remove(tracker);
-            await _context.SaveChangesAsync();
+            var tracker = await _context.Table<Tracker>().FirstAsync(t => t.Id == id);
+            await _context.DeleteAsync(tracker);
         }
 
         /// <summary>
@@ -76,9 +73,9 @@ namespace DayTrack.Services
         {
             name = name ?? throw new ArgumentNullException(nameof(name));
 
-            var tracker = await _context.Trackers.FirstAsync(t => t.Id == id);
+            var tracker = await _context.Table<Tracker>().FirstAsync(t => t.Id == id);
             tracker.Name = name;
-            await _context.SaveChangesAsync();
+            await _context.UpdateAsync(tracker);
             return tracker;
         }
 
