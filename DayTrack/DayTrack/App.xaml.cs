@@ -2,7 +2,6 @@
 using DayTrack.Services;
 using DayTrack.ViewModels;
 using DayTrack.Views;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using SimpleInjector;
 using System.IO;
@@ -27,15 +26,11 @@ namespace DayTrack
                 .CreateLogger();
 
             string databasePath = Path.Combine(FileSystem.AppDataDirectory, "app.db");
-            var context = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlite($"Data source={databasePath}")
-                .Options);
-
-            context.Database.Migrate();
+            var database = new AppDatabase(databasePath);
 
             DependencyContainer = new Container();
             DependencyContainer.RegisterSingleton<ILogger>(() => logger);
-            DependencyContainer.RegisterSingleton(() => context);
+            DependencyContainer.RegisterSingleton(() => database);
             DependencyContainer.RegisterSingleton<ITrackerService, TrackerService>();
             DependencyContainer.RegisterSingleton<ITrackerLogService, TrackerLogService>();
             DependencyContainer.RegisterSingleton<TrackerViewModel>();

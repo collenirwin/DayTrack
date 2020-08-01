@@ -1,3 +1,4 @@
+using DayTrack.Models;
 using DayTrack.Services;
 using Newtonsoft.Json;
 using Serilog;
@@ -11,11 +12,11 @@ namespace DayTrack.Tests
     /// <summary>
     /// Tests for <see cref="TrackerService"/> methods.
     /// </summary>
-    public class TrackerServiceTests : AppDbContextTestBase
+    public class TrackerServiceTests : AppDatabaseTestBase
     {
         private readonly ILogger _logger;
 
-        public TrackerServiceTests()
+        public TrackerServiceTests() : base(databasePath: $"{nameof(TrackerServiceTests)}.db")
         {
             _logger = new LoggerConfiguration()
                 .WriteTo.Debug()
@@ -28,7 +29,7 @@ namespace DayTrack.Tests
         public async Task TryAddTrackerAsync_DuplicateName_ReturnsNull()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             string name = "T0"; // created in seed
 
             // act
@@ -42,7 +43,7 @@ namespace DayTrack.Tests
         public async Task TryAddTrackerAsync_NullName_ReturnsNull()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             string name = null;
 
             // act
@@ -56,7 +57,7 @@ namespace DayTrack.Tests
         public async Task TryAddTrackerAsync_NameOnly_HasId()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             string name = "Test";
 
             // act
@@ -70,7 +71,7 @@ namespace DayTrack.Tests
         public async Task TryAddTrackerAsync_NameOnly_HasDateCreated()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             string name = "Test";
 
             // act
@@ -84,17 +85,16 @@ namespace DayTrack.Tests
         public async Task TryAddTrackerAsync_NameOnly_ExistsInDb()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             string name = "Test";
 
             // act
-            var tracker = await service.TryAddTrackerAsync(name);
-            var fetched = _context.Trackers.FirstOrDefault(t => t.Id == tracker.Id);
-            string expected = JsonConvert.SerializeObject(tracker);
-            string actual = JsonConvert.SerializeObject(fetched);
+            var expected = await service.TryAddTrackerAsync(name);
+            var actual = await _context.Table<Tracker>().FirstOrDefaultAsync(t => t.Id == expected.Id);
 
             // assert
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
         }
 
         #endregion
@@ -105,7 +105,7 @@ namespace DayTrack.Tests
         public async Task TryDeleteTrackerAsync_NewId_ReturnsFalse()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 100;
 
             // act
@@ -119,7 +119,7 @@ namespace DayTrack.Tests
         public async Task TryDeleteTrackerAsync_ExistingId_ReturnsTrue()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
 
             // act
@@ -133,12 +133,12 @@ namespace DayTrack.Tests
         public async Task TryDeleteTrackerAsync_ExistingId_DeletesTracker()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
 
             // act
             await service.TryDeleteTrackerAsync(id);
-            var tracker = _context.Trackers.FirstOrDefault(t => t.Id == id);
+            var tracker = await _context.Table<Tracker>().FirstOrDefaultAsync(t => t.Id == id);
 
             // assert
             Assert.Null(tracker);
@@ -148,12 +148,12 @@ namespace DayTrack.Tests
         public async Task TryDeleteTrackerAsync_ExistingId_DeletesLoggedDays()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
 
             // act
             await service.TryDeleteTrackerAsync(id);
-            var days = _context.LoggedDays.Where(day => day.TrackerId == id);
+            var days = await _context.Table<LoggedDay>().Where(day => day.TrackerId == id).ToListAsync();
 
             // assert
             Assert.Empty(days);
@@ -167,7 +167,7 @@ namespace DayTrack.Tests
         public async Task TryUpdateTrackerNameAsync_NullName_ReturnsNull()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
             string name = null;
 
@@ -182,13 +182,13 @@ namespace DayTrack.Tests
         public async Task TryUpdateTrackerNameAsync_NullName_DoesNotUpdateTracker()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
             string name = null;
 
             // act
             await service.TryUpdateTrackerNameAsync(id, name);
-            var tracker = _context.Trackers.First(t => t.Id == id);
+            var tracker = await _context.Table<Tracker>().FirstAsync(t => t.Id == id);
 
             // assert
             Assert.NotNull(tracker.Name);
@@ -198,7 +198,7 @@ namespace DayTrack.Tests
         public async Task TryUpdateTrackerNameAsync_NewName_ReturnsTracker()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
             string name = "Anne";
 
@@ -213,13 +213,13 @@ namespace DayTrack.Tests
         public async Task TryUpdateTrackerNameAsync_NewName_UpdatesTracker()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
             string name = "Anne";
 
             // act
             await service.TryUpdateTrackerNameAsync(id, name);
-            var tracker = _context.Trackers.First(t => t.Id == id);
+            var tracker = await _context.Table<Tracker>().FirstAsync(t => t.Id == id);
 
             // assert
             Assert.Equal(name, tracker.Name);
@@ -229,7 +229,7 @@ namespace DayTrack.Tests
         public async Task TryUpdateTrackerNameAsync_SameName_ReturnsTracker()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
             int id = 1;
             string name = "T0";
 
@@ -248,13 +248,13 @@ namespace DayTrack.Tests
         public async Task TryGetAllTrackersAsync_ReturnsAllTrackers()
         {
             // arrange
-            var service = new TrackerService(_context, _logger);
+            var service = new TrackerService(_database, _logger);
 
             // act
             var trackers = await service.TryGetAllTrackersAsync();
 
             // assert
-            Assert.Equal(TrackerCount, trackers.Count());
+            Assert.Equal(Trackers.Count, trackers.Count());
         }
 
         #endregion
