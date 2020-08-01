@@ -11,14 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EFCore.BulkExtensions" Version="3.1.5" />
     <PackageReference Include="Microcharts.Forms" Version="0.9.5" />
-    <PackageReference Include="microsoft.entityframeworkcore" Version="3.1.6" />
-    <PackageReference Include="microsoft.entityframeworkcore.sqlite" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Plugin.Permissions" Version="6.0.1" />
     <PackageReference Include="serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />

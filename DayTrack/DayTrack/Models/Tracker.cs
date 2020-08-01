@@ -1,9 +1,5 @@
 ﻿using SQLite;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using TableAttribute = SQLite.TableAttribute;
 
 namespace DayTrack.Models
 {
@@ -16,9 +12,7 @@ namespace DayTrack.Models
         /// <summary>
         /// Auto-generated primary key.
         /// </summary>
-        [Key]
         [PrimaryKey, AutoIncrement]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
