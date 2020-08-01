@@ -15,10 +15,9 @@ namespace DayTrack.Tests.Mocks
 
         public Task<bool> TryDeleteLoggedDayAsync(int id) => Task.FromResult(false);
 
-        public Task<IEnumerable<LoggedDayGroup>> TryGetAllLoggedDayGroupsAsync(int trackerId,
-            GroupSortOption sortOption) =>
-                Task.FromResult<IEnumerable<LoggedDayGroup>>(null);
-        
+        public IEnumerable<LoggedDayGroup> TryGetAllLoggedDayGroups(IEnumerable<LoggedDay> loggedDays,
+            int trackerId, GroupSortOption sortOption) => null;
+
         public Task<IEnumerable<LoggedDay>> TryGetAllLoggedDaysAsync(int trackerId) =>
             Task.FromResult<IEnumerable<LoggedDay>>(null);
 

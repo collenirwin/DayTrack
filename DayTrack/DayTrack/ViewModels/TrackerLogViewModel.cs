@@ -164,7 +164,7 @@ namespace DayTrack.ViewModels
 
         internal async Task<bool> PopulateAllDayGroupsAsync()
         {
-            var allDayGroups = await _logService.TryGetAllLoggedDayGroupsAsync(_tracker.Id, _sortOption);
+            var allDayGroups = await _logService.TryGetAllLoggedDayGroups(_tracker.Id, _sortOption);
 
             if (allDayGroups == null)
             {

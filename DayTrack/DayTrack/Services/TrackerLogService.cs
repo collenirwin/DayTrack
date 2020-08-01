@@ -1,9 +1,8 @@
 ﻿using DayTrack.Data;
 using DayTrack.Models;
 using DayTrack.Utils;
-using EFCore.BulkExtensions;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,25 +15,21 @@ namespace DayTrack.Services
     /// </summary>
     public class TrackerLogService : ITrackerLogService
     {
-        private readonly AppDbContext _context;
+        private readonly SQLiteAsyncConnection _context;
         private readonly ILogger _logger;
 
-        public TrackerLogService(AppDbContext context, ILogger logger)
+        public TrackerLogService(AppDatabase database, ILogger logger)
         {
-            _context = context;
+            _context = database.Connection;
             _logger = logger;
         }
 
-        private async Task LogDayAsync(DateTime day, int trackerId)
-        {
-            _context.LoggedDays.Add(new LoggedDay
+        private async Task LogDayAsync(DateTime day, int trackerId) =>
+            await _context.InsertAsync(new LoggedDay
             {
                 TrackerId = trackerId,
                 Date = day
             });
-
-            await _context.SaveChangesAsync();
-        }
 
         /// <summary>
         /// Adds a new <see cref="LoggedDay"/> to the database with the given date and under the given tracker.
@@ -48,9 +43,8 @@ namespace DayTrack.Services
 
         private async Task DeleteLoggedDayAsync(int id)
         {
-            var loggedDay = await _context.LoggedDays.FirstAsync(day => day.Id == id);
-            _context.LoggedDays.Remove(loggedDay);
-            await _context.SaveChangesAsync();
+            var loggedDay = await _context.Table<LoggedDay>().FirstAsync(day => day.Id == id);
+            await _context.DeleteAsync(loggedDay);
         }
 
         /// <summary>
@@ -63,7 +57,7 @@ namespace DayTrack.Services
                 ex => _logger.Error(ex, $"Failed to delete logged day with id {id}."));
 
         private async Task<IEnumerable<LoggedDay>> GetAllLoggedDaysAsync(int trackerId) =>
-            await _context.LoggedDays
+            await _context.Table<LoggedDay>()
                 .Where(day => day.TrackerId == trackerId)
                 .OrderByDescending(day => day.Date)
                 .ToListAsync();
@@ -77,10 +71,12 @@ namespace DayTrack.Services
             await Try.RunAsync(async () => await GetAllLoggedDaysAsync(trackerId),
                 ex => _logger.Error(ex, $"Failed to get all logged days for tracker id {trackerId}."));
 
-        private async Task<IEnumerable<LoggedDayGroup>> GetAllLoggedDayGroupsAsync(int trackerId,
-            GroupSortOption sortOption)
+        private IEnumerable<LoggedDayGroup> GetAllLoggedDayGroups(IEnumerable<LoggedDay> loggedDays,
+            int trackerId, GroupSortOption sortOption)
         {
-            var query = _context.LoggedDays
+            loggedDays = loggedDays ?? throw new ArgumentNullException(nameof(loggedDays));
+
+            var groups = loggedDays
                 .Where(day => day.TrackerId == trackerId)
                 .GroupBy(day => day.Date.Date,
                     (day, group) => new LoggedDayGroup
@@ -89,26 +85,27 @@ namespace DayTrack.Services
                         Count = group.Count()
                     });
 
-            query = sortOption switch
+            groups = sortOption switch
             {
-                GroupSortOption.DateDescending => query.OrderByDescending(group => group.Date),
-                GroupSortOption.DateAscending => query.OrderBy(group => group.Date),
-                GroupSortOption.CountDescending => query.OrderByDescending(group => group.Count),
+                GroupSortOption.DateDescending => groups.OrderByDescending(group => group.Date),
+                GroupSortOption.DateAscending => groups.OrderBy(group => group.Date),
+                GroupSortOption.CountDescending => groups.OrderByDescending(group => group.Count),
                 _ => throw new NotImplementedException($"Sort option '{sortOption}' not supported.")
             };
 
-            return await query.ToListAsync();
+            return groups;
         }
 
         /// <summary>
         /// Gets all <see cref="LoggedDay"/>s as <see cref="LoggedDayGroup"/>s for a given tracker id.
         /// </summary>
+        /// <param name="loggedDays">Logged days to group.</param>
         /// <param name="trackerId">Tracker id of the logged days to get.</param>
         /// <param name="sortOption">Specifies the way to sort the results.</param>
         /// <returns>All logged day groups under the given tracker, in the given sort order.</returns>
-        public async Task<IEnumerable<LoggedDayGroup>> TryGetAllLoggedDayGroupsAsync(int trackerId,
-            GroupSortOption sortOption) =>
-                await Try.RunAsync(async () => await GetAllLoggedDayGroupsAsync(trackerId, sortOption),
+        public IEnumerable<LoggedDayGroup> TryGetAllLoggedDayGroups(IEnumerable<LoggedDay> loggedDays,
+            int trackerId, GroupSortOption sortOption) =>
+                Try.Run(() => GetAllLoggedDayGroups(loggedDays, trackerId, sortOption),
                     ex => _logger.Error(ex, $"Failed to get all logged day groups for tracker id {trackerId}."));
 
         private async Task BulkAddEntriesAsync(IEnumerable<DateTime> days, int trackerId)
@@ -117,9 +114,9 @@ namespace DayTrack.Services
             {
                 TrackerId = trackerId,
                 Date = day
-            }).ToList();
+            });
 
-            await _context.BulkInsertAsync(loggedDays);
+            await _context.InsertAllAsync(loggedDays);
         }
 
         /// <summary>

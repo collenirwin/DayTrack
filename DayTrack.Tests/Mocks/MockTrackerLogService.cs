@@ -39,17 +39,17 @@ namespace DayTrack.Tests.Mocks
             return Task.FromResult(true);
         }
 
-        public Task<IEnumerable<LoggedDayGroup>> TryGetAllLoggedDayGroupsAsync(int trackerId,
+        public IEnumerable<LoggedDayGroup> TryGetAllLoggedDayGroups(IEnumerable<LoggedDay> loggedDays, int trackerId,
             GroupSortOption sortOption)
         {
             SortOption = sortOption;
-            return Task.FromResult(LoggedDays.Where(day => day.TrackerId == trackerId)
+            return LoggedDays.Where(day => day.TrackerId == trackerId)
                 .GroupBy(day => day.Date.Date,
                     (day, group) => new LoggedDayGroup
                     {
                         Date = day,
                         Count = group.Count()
-                    }));
+                    });
         }
 
         public Task<IEnumerable<LoggedDay>> TryGetAllLoggedDaysAsync(int trackerId) =>
