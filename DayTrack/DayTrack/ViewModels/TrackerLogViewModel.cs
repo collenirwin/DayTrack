@@ -171,7 +171,7 @@ namespace DayTrack.ViewModels
         internal async Task<bool> PopulateAllDayGroupsAsync()
         {
             await PopulateAllDaysAsync();
-            var allDayGroups = _logService.TryGetAllLoggedDayGroups(AllDays, _tracker.Id, _sortOption)
+            var allDayGroups = _logService.TryGetAllLoggedDayGroups(AllDays, _tracker.Id, _sortOption)?
                 .Select(group =>
                 {
                     group.DateString = group.Date.ToString(SettingsViewModel.DateFormat);
