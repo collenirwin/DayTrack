@@ -78,7 +78,7 @@ namespace DayTrack.ViewModels
         /// <summary>
         /// Manages user settings.
         /// </summary>
-        public SettingsViewModel SettingsViewModel { get; }
+        public ISettingsViewModel SettingsViewModel { get; }
 
         /// <summary>
         /// Create a new <see cref="LoggedDay"/> with the current <see cref="DateToLog"/>.
@@ -106,7 +106,7 @@ namespace DayTrack.ViewModels
         /// </summary>
         public ICommand PullStatsCommand { get; }
 
-        public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService, SettingsViewModel settingsViewModel)
+        public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService, ISettingsViewModel settingsViewModel)
         {
             _tracker = tracker;
             _logService = logService;

@@ -9,7 +9,7 @@ namespace DayTrack.ViewModels
     /// <summary>
     /// Provides an interface for managing application settings.
     /// </summary>
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
         private string _dateFormat;
         private readonly SettingsService _settingsService;

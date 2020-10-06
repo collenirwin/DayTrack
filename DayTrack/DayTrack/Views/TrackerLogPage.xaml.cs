@@ -32,7 +32,7 @@ namespace DayTrack.Views
 
             BindingContext = _viewModel = new TrackerLogViewModel(tracker,
                 logService: App.DependencyContainer.GetInstance<ITrackerLogService>(),
-                settingsViewModel: App.DependencyContainer.GetInstance<SettingsViewModel>());
+                settingsViewModel: App.DependencyContainer.GetInstance<ISettingsViewModel>());
 
             SortOptionPicker.SelectedIndex = 0;
             SortOptionPicker.SelectedIndexChanged += OnSortChange;
