@@ -15,7 +15,7 @@
     
     <ContentPage.Content>
         <StackLayout Margin="10, 10, 10, 0">
-            <DatePicker Date="{Binding DateToLog}" />
+            <DatePicker Date="{Binding DateToLog}" Format="{Binding SettingsViewModel.DateFormat}" />
             <Button Text="LOG" Command="{Binding LogDayCommand}" />
             <Grid>
                 <Grid.RowDefinitions>
@@ -54,7 +54,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0"
-                                       Text="{Binding Date, StringFormat='{0:M/d/yyyy}'}"
+                                       Text="{Binding DateString}"
                                        FontSize="Medium"
                                        HorizontalTextAlignment="Start" />
 

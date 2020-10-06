@@ -40,6 +40,7 @@ namespace DayTrack
             DependencyContainer.RegisterSingleton<TrackerViewModel>();
             DependencyContainer.RegisterSingleton<ImportViewModel>();
             DependencyContainer.RegisterSingleton<ExportViewModel>();
+            DependencyContainer.RegisterSingleton<SettingsViewModel>();
 
             MainPage = new ConductorPage();
         }

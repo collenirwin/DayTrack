@@ -76,6 +76,11 @@ namespace DayTrack.ViewModels
         }
 
         /// <summary>
+        /// Manages user settings.
+        /// </summary>
+        public SettingsViewModel SettingsViewModel { get; }
+
+        /// <summary>
         /// Create a new <see cref="LoggedDay"/> with the current <see cref="DateToLog"/>.
         /// </summary>
         public ICommand LogDayCommand { get; }
@@ -101,10 +106,11 @@ namespace DayTrack.ViewModels
         /// </summary>
         public ICommand PullStatsCommand { get; }
 
-        public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService)
+        public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService, SettingsViewModel settingsViewModel)
         {
             _tracker = tracker;
             _logService = logService;
+            SettingsViewModel = settingsViewModel;
 
             LogDayCommand = new Command(async () => await LogDayAsync().ExpressLoading(this));
             DeleteLoggedDayCommand = new Command(async day =>
@@ -165,7 +171,12 @@ namespace DayTrack.ViewModels
         internal async Task<bool> PopulateAllDayGroupsAsync()
         {
             await PopulateAllDaysAsync();
-            var allDayGroups = _logService.TryGetAllLoggedDayGroups(AllDays, _tracker.Id, _sortOption);
+            var allDayGroups = _logService.TryGetAllLoggedDayGroups(AllDays, _tracker.Id, _sortOption)
+                .Select(group =>
+                {
+                    group.DateString = group.Date.ToString(SettingsViewModel.DateFormat);
+                    return group;
+                });
 
             if (allDayGroups == null)
             {
