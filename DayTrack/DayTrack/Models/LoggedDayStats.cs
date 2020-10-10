@@ -28,13 +28,13 @@ namespace DayTrack.Models
         public int Median { get; set; }
 
         /// <summary>
-        /// The date of the first log entry.
+        /// The date string of the first log entry.
         /// </summary>
-        public DateTime First { get; set; }
+        public string First { get; set; }
 
         /// <summary>
-        /// The date of the last log entry.
+        /// The date string of the last log entry.
         /// </summary>
-        public DateTime Last { get; set; }
+        public string Last { get; set; }
     }
 }

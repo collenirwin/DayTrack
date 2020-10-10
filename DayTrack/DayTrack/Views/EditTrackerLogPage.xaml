@@ -29,7 +29,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0"
-                                       Text="{Binding Date, StringFormat='{0:M/d/yyyy}'}"
+                                       Text="{Binding Date, StringFormat='{0:d MMMM yyyy}'}"
                                        FontSize="Medium"
                                        HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Center" />

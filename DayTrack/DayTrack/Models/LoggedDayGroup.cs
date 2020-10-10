@@ -13,6 +13,11 @@ namespace DayTrack.Models
         public DateTime Date { get; set; }
 
         /// <summary>
+        /// <see cref="Date"/> in string form.
+        /// </summary>
+        public string DateString { get; set; }
+
+        /// <summary>
         /// The number of other <see cref="LoggedDay"/>s logged for this day.
         /// </summary>
         public int Count { get; set; }

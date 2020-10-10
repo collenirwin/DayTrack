@@ -30,7 +30,8 @@ namespace DayTrack.Views
             Title = $"Editing {tracker.Name}";
 
             BindingContext = _viewModel = new TrackerLogViewModel(tracker,
-                logService: App.DependencyContainer.GetInstance<ITrackerLogService>());
+                logService: App.DependencyContainer.GetInstance<ITrackerLogService>(),
+                settingsViewModel: App.DependencyContainer.GetInstance<ISettingsViewModel>());
         }
 
         private async void OnAppearing(object sender, EventArgs e) =>

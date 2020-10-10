@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DayTrack.ViewModels;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,6 +11,7 @@ namespace DayTrack.Views
         public SettingsPage()
         {
             InitializeComponent();
+            BindingContext = App.DependencyContainer.GetInstance<SettingsViewModel>();
         }
 
         private async void OnImportClick(object sender, EventArgs e) =>

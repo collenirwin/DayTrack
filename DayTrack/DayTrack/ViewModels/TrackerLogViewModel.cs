@@ -76,6 +76,11 @@ namespace DayTrack.ViewModels
         }
 
         /// <summary>
+        /// Manages user settings.
+        /// </summary>
+        public ISettingsViewModel SettingsViewModel { get; }
+
+        /// <summary>
         /// Create a new <see cref="LoggedDay"/> with the current <see cref="DateToLog"/>.
         /// </summary>
         public ICommand LogDayCommand { get; }
@@ -101,10 +106,11 @@ namespace DayTrack.ViewModels
         /// </summary>
         public ICommand PullStatsCommand { get; }
 
-        public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService)
+        public TrackerLogViewModel(Tracker tracker, ITrackerLogService logService, ISettingsViewModel settingsViewModel)
         {
             _tracker = tracker;
             _logService = logService;
+            SettingsViewModel = settingsViewModel;
 
             LogDayCommand = new Command(async () => await LogDayAsync().ExpressLoading(this));
             DeleteLoggedDayCommand = new Command(async day =>
@@ -165,7 +171,12 @@ namespace DayTrack.ViewModels
         internal async Task<bool> PopulateAllDayGroupsAsync()
         {
             await PopulateAllDaysAsync();
-            var allDayGroups = _logService.TryGetAllLoggedDayGroups(AllDays, _tracker.Id, _sortOption);
+            var allDayGroups = _logService.TryGetAllLoggedDayGroups(AllDays, _tracker.Id, _sortOption)?
+                .Select(group =>
+                {
+                    group.DateString = group.Date.ToString(SettingsViewModel.DateFormat);
+                    return group;
+                });
 
             if (allDayGroups == null)
             {
@@ -203,8 +214,8 @@ namespace DayTrack.ViewModels
                 Min = AllDayGroups.Min(group => group.Count),
                 Max = AllDayGroups.Max(group => group.Count),
                 Median = AllDayGroups[medianIndex].Count,
-                First = first,
-                Last = last
+                First = first.ToString(SettingsViewModel.DateFormat),
+                Last = first.ToString(SettingsViewModel.DateFormat)
             };
 
             return true;

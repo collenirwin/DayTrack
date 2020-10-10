@@ -21,7 +21,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService(), new MockSettingsViewModel());
 
             // act
             await vm.LogDayAsync();
@@ -35,7 +35,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker();
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
 
             bool messageSent = false;
             MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
@@ -59,7 +59,7 @@ namespace DayTrack.Tests
             var tracker = new Tracker { Id = 0 };
             var day = new LoggedDay { Id = 0, TrackerId = 0 };
             var service = new MockTrackerLogService();
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             service.LoggedDays.Add(day);
             vm.AllDays.Add(day);
 
@@ -76,7 +76,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService(), new MockSettingsViewModel());
             vm.AllDays.Add(null);
 
             // act
@@ -93,7 +93,7 @@ namespace DayTrack.Tests
             var tracker = new Tracker { Id = 0 };
             var newDay = new LoggedDay { Id = 0, TrackerId = 0 };
             var existingDay = new LoggedDay { Id = 5, TrackerId = 0 };
-            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService(), new MockSettingsViewModel());
             vm.AllDays.Add(existingDay);
 
             // act
@@ -109,7 +109,7 @@ namespace DayTrack.Tests
             // arrange
             var tracker = new Tracker { Id = 0 };
             var day = new LoggedDay { Id = 0, TrackerId = 0 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
             vm.AllDays.Add(day);
 
             // act
@@ -125,7 +125,7 @@ namespace DayTrack.Tests
             // arrange
             var tracker = new Tracker { Id = 0 };
             var day = new LoggedDay { Id = 0, TrackerId = 0 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
             vm.AllDays.Add(day);
 
             LoggedDay sentDay = null;
@@ -148,7 +148,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
 
             bool messageSent = false;
             MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
@@ -167,7 +167,7 @@ namespace DayTrack.Tests
             // arrange
             var tracker = new Tracker { Id = 0 };
             var day = new LoggedDay { Id = 0, TrackerId = 0 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
             vm.AllDays.Add(day);
 
             // act
@@ -186,7 +186,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
 
             bool messageSent = false;
             MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
@@ -205,7 +205,7 @@ namespace DayTrack.Tests
             // arrange
             var tracker = new Tracker { Id = 0 };
             var group = new LoggedDayGroup { Date = DateTime.Now.Date, Count = 2 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
             vm.AllDayGroups.Add(group);
 
             // act
@@ -224,7 +224,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
 
             bool messageSent = false;
             MessagingCenter.Subscribe<TrackerLogViewModel>(this, TrackerLogViewModel.DatabaseErrorMessage,
@@ -242,7 +242,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new FailingTrackerLogService(), new MockSettingsViewModel());
 
             // act
             await vm.PopulateStatsAsync();
@@ -256,7 +256,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService());
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService(), new MockSettingsViewModel());
 
             // act
             await vm.PopulateStatsAsync();
@@ -270,7 +270,7 @@ namespace DayTrack.Tests
         {
             // arrange
             var tracker = new Tracker { Id = 0 };
-            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService())
+            var vm = new TrackerLogViewModel(tracker, new MockTrackerLogService(), new MockSettingsViewModel())
             {
                 AllDayGroups = null
             };
@@ -291,7 +291,7 @@ namespace DayTrack.Tests
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             await vm.PopulateAllDayGroupsAsync();
 
             // act
@@ -310,7 +310,7 @@ namespace DayTrack.Tests
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             await vm.PopulateAllDayGroupsAsync();
 
             // act
@@ -329,7 +329,7 @@ namespace DayTrack.Tests
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 2) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 3) });
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             await vm.PopulateAllDayGroupsAsync();
 
             // act
@@ -347,7 +347,7 @@ namespace DayTrack.Tests
             var service = new MockTrackerLogService();
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 4) });
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             await vm.PopulateAllDayGroupsAsync();
 
             // act
@@ -364,7 +364,7 @@ namespace DayTrack.Tests
             var tracker = new Tracker { Id = 0 };
             var service = new MockTrackerLogService();
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             await vm.PopulateAllDayGroupsAsync();
 
             // act
@@ -385,7 +385,7 @@ namespace DayTrack.Tests
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2001, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2000, 1, 1) });
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             await vm.PopulateAllDayGroupsAsync();
 
             // act
@@ -414,7 +414,7 @@ namespace DayTrack.Tests
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2002, 1, 1) });
 
             service.LoggedDays.Add(new LoggedDay { Date = new DateTime(2003, 1, 1) });
-            var vm = new TrackerLogViewModel(tracker, service);
+            var vm = new TrackerLogViewModel(tracker, service, new MockSettingsViewModel());
             await vm.PopulateAllDayGroupsAsync();
 
             // act
