@@ -30,17 +30,19 @@ namespace DayTrack
 
             string userSettingsPath = Path.Combine(FileSystem.AppDataDirectory, "user_settings.json");
             var settingsService = new SettingsService(userSettingsPath, logger);
+            var settingsViewModel = new SettingsViewModel(settingsService);
 
             DependencyContainer = new Container();
             DependencyContainer.RegisterSingleton<ILogger>(() => logger);
             DependencyContainer.RegisterSingleton(() => database);
             DependencyContainer.RegisterSingleton(() => settingsService);
+            DependencyContainer.RegisterSingleton(() => settingsViewModel);
+            DependencyContainer.RegisterSingleton<ISettingsViewModel>(() => settingsViewModel);
             DependencyContainer.RegisterSingleton<ITrackerService, TrackerService>();
             DependencyContainer.RegisterSingleton<ITrackerLogService, TrackerLogService>();
             DependencyContainer.RegisterSingleton<TrackerViewModel>();
             DependencyContainer.RegisterSingleton<ImportViewModel>();
             DependencyContainer.RegisterSingleton<ExportViewModel>();
-            DependencyContainer.RegisterSingleton<ISettingsViewModel, SettingsViewModel>();
 
             MainPage = new ConductorPage();
         }
