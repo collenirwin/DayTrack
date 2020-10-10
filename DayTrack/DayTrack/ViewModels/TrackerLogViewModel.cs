@@ -214,8 +214,8 @@ namespace DayTrack.ViewModels
                 Min = AllDayGroups.Min(group => group.Count),
                 Max = AllDayGroups.Max(group => group.Count),
                 Median = AllDayGroups[medianIndex].Count,
-                First = first,
-                Last = last
+                First = first.ToString(SettingsViewModel.DateFormat),
+                Last = first.ToString(SettingsViewModel.DateFormat)
             };
 
             return true;

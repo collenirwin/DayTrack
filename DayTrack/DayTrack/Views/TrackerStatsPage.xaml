@@ -30,14 +30,14 @@
 
                 <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
                     <Label Text="First log" HorizontalTextAlignment="Center" />
-                    <Label Text="{Binding LoggedDayStats.First, StringFormat='{0:M/d/yyyy}'}"
+                    <Label Text="{Binding LoggedDayStats.First}"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium" />
                 </StackLayout>
 
                 <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
                     <Label Text="Last log" HorizontalTextAlignment="Center" />
-                    <Label Text="{Binding LoggedDayStats.Last, StringFormat='{0:M/d/yyyy}'}"
+                    <Label Text="{Binding LoggedDayStats.Last}"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium" />
                 </StackLayout>
