@@ -11,7 +11,7 @@
         <StackLayout Margin="10">
             <ActivityIndicator IsVisible="{Binding IsLoading}" />
 
-            <Label Text="Last two weeks" FontSize="Medium" HorizontalTextAlignment="Center" />
+            <Label Text="Last two weeks" FontSize="Medium" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
             <microcharts:ChartView x:Name="ChartView" HeightRequest="200" Margin="10" />
             
             <Grid>
@@ -68,7 +68,7 @@
                 </StackLayout>
 
                 <StackLayout Grid.Row="4" Grid.Column="0" HorizontalOptions="Center">
-                    <Label Text="Minimum (non-zero)" HorizontalTextAlignment="Center" />
+                    <Label Text="Minimum" HorizontalTextAlignment="Center" />
                     <Label Text="{Binding LoggedDayStats.Min}"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium" />

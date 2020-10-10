@@ -49,13 +49,14 @@ namespace DayTrack.Views
             {
                 Entries = pastEntries.Select(entry => new ChartEntry(entry.Count)
                 {
-                    Label = entry.Count == 0 ? " " : $"{entry.Date.Month}/{entry.Date.Day}",
+                    Label = entry.Date.DayOfWeek.ToString().Substring(0, 3).ToUpper(),
                     ValueLabel = entry.Count == 0 ? " " : entry.Count.ToString(),
                     Color = lineColor
                 }),
                 PointMode = PointMode.Circle,
                 PointSize = 30,
                 ValueLabelOrientation = Orientation.Horizontal,
+                LabelOrientation = Orientation.Vertical,
                 LabelTextSize = 35,
                 BackgroundColor = SKColors.Transparent
             };
