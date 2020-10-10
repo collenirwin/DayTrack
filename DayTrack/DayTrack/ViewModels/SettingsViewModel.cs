@@ -11,7 +11,6 @@ namespace DayTrack.ViewModels
     /// </summary>
     public class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
-        private string _dateFormat;
         private readonly SettingsService _settingsService;
 
         /// <summary>
@@ -19,12 +18,13 @@ namespace DayTrack.ViewModels
         /// </summary>
         public string DateFormat
         {
-            get => _dateFormat;
+            get => _settingsService.UserSettings.DateFormat;
             set
             {
-                if (_dateFormat != value && AllDateFormats.Contains(value))
+                if (_settingsService.UserSettings.DateFormat != value && AllDateFormats.Contains(value))
                 {
-                    SetAndRaiseIfChanged(ref _dateFormat, value);
+                    _settingsService.UserSettings.DateFormat = value;
+                    RaiseChange(nameof(DateFormat));
                     SaveUserSettingsCommand.Execute(null);
                 }
             }
@@ -48,7 +48,6 @@ namespace DayTrack.ViewModels
         public SettingsViewModel(SettingsService settingsService)
         {
             _settingsService = settingsService;
-            _dateFormat = settingsService.UserSettings.DateFormat;
 
             SaveUserSettingsCommand = new Command(() => SaveUserSettings());
         }
