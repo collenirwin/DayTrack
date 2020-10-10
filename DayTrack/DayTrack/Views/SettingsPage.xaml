@@ -11,6 +11,21 @@
         <StackLayout Margin="10">
             <Button Text="IMPORT TRACKER DATA" Clicked="OnImportClick" />
             <Button Text="EXPORT TRACKER DATA" Clicked="OnExportClick" />
+
+            <BoxView Color="Silver" HeightRequest="1" Margin="10" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Date format" Grid.Column="0"
+                       VerticalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       FontSize="Medium" />
+                <Picker ItemsSource="{Binding AllDateFormats}" SelectedItem="{Binding DateFormat}" Grid.Column="1" />
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
