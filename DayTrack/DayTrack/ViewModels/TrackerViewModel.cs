@@ -118,6 +118,7 @@ namespace DayTrack.ViewModels
             CreateCommand = new Command(async () => await CreateAsync());
             UpdateCommand = new Command(async () => await UpdateAsync());
             DeleteCommand = new Command(async tracker => await DeleteAsync((Tracker)tracker));
+            PullRecentCommand = new Command(async () => await PopulateRecentTrackersAsync());
             _ = PopulateAllTrackersAsync();
         }
 

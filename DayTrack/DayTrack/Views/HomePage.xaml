@@ -11,11 +11,9 @@
     <ContentPage.Content>
         <StackLayout Margin="10">
             <views:NavButtons HeightRequest="50" />
-            
-            <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                <Image Source="home.png" HeightRequest="128" VerticalOptions="Center" HorizontalOptions="Center" />
-            </Grid>
-            
+
+            <views:RecentTrackers />
+
             <StackLayout VerticalOptions="End">
                 <Button Text="CREATE A NEW TRACKER" Clicked="OnNewTrackerClick" />
                 <Button Text="VIEW EXISTING TRACKERS" Clicked="OnViewTrackersClick" />
