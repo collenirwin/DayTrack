@@ -258,5 +258,67 @@ namespace DayTrack.Tests
         }
 
         #endregion
+
+        #region TryGetRecentTrackersAsync
+
+        [Fact]
+        public async Task TryGetRecentTrackersAsync_2_Gets2MostRecentTrackers()
+        {
+            // arrange
+            var service = new TrackerService(_database, _logger);
+
+            // act
+            var trackers = await service.TryGetRecentTrackersAsync(count: 2);
+
+            // assert
+            Assert.Equal(2, trackers.Count());
+            Assert.NotNull(trackers.First());
+            Assert.NotNull(trackers.Last());
+            Assert.Equal(1, trackers.First().Id);
+            Assert.Equal(2, trackers.Last().Id);
+        }
+
+        [Fact]
+        public async Task TryGetRecentTrackersAsync_1_GetsMostRecentTracker()
+        {
+            // arrange
+            var service = new TrackerService(_database, _logger);
+
+            // act
+            var trackers = await service.TryGetRecentTrackersAsync(count: 1);
+
+            // assert
+            Assert.Single(trackers);
+            Assert.NotNull(trackers.First());
+            Assert.Equal(1, trackers.First().Id);
+        }
+
+        [Fact]
+        public async Task TryGetRecentTrackersAsync_0_GetsEmptyResultSet()
+        {
+            // arrange
+            var service = new TrackerService(_database, _logger);
+
+            // act
+            var trackers = await service.TryGetRecentTrackersAsync(count: 0);
+
+            // assert
+            Assert.Empty(trackers);
+        }
+
+        [Fact]
+        public async Task TryGetRecentTrackersAsync_Negative_ReturnsNull()
+        {
+            // arrange
+            var service = new TrackerService(_database, _logger);
+
+            // act
+            var trackers = await service.TryGetRecentTrackersAsync(count: -1);
+
+            // assert
+            Assert.Null(trackers);
+        }
+
+        #endregion
     }
 }
