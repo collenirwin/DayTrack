@@ -1,5 +1,6 @@
 ﻿using DayTrack.Models;
 using DayTrack.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,6 +42,8 @@ namespace DayTrack.Tests.Mocks
         }
 
         public Task<IEnumerable<Tracker>> TryGetAllTrackersAsync() => Task.FromResult(Trackers.AsEnumerable());
+
+        public Task<IEnumerable<Tracker>> TryGetRecentTrackersAsync(int count) => throw new NotImplementedException();
 
         public Task<Tracker> TryUpdateTrackerNameAsync(int id, string name)
         {

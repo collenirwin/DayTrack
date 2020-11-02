@@ -3,16 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:DayTrack.Views"
              mc:Ignorable="d"
              x:Class="DayTrack.Views.HomePage"
              Title="Day Tracker">
     
     <ContentPage.Content>
         <StackLayout Margin="10">
-            <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                <Image Source="home.png" HeightRequest="128" VerticalOptions="Center" HorizontalOptions="Center" />
-            </Grid>
-            
+            <views:NavButtons HeightRequest="50" />
+
+            <views:RecentTrackers />
+
             <StackLayout VerticalOptions="End">
                 <Button Text="CREATE A NEW TRACKER" Clicked="OnNewTrackerClick" />
                 <Button Text="VIEW EXISTING TRACKERS" Clicked="OnViewTrackersClick" />

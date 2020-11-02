@@ -9,6 +9,7 @@ namespace DayTrack.Services
         Task<Tracker> TryAddTrackerAsync(string name);
         Task<Tracker> TryUpdateTrackerNameAsync(int id, string name);
         Task<IEnumerable<Tracker>> TryGetAllTrackersAsync();
+        Task<IEnumerable<Tracker>> TryGetRecentTrackersAsync(int count);
         Task<bool> TryDeleteTrackerAsync(int id);
     }
 }

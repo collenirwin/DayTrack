@@ -20,12 +20,18 @@ namespace DayTrack.ViewModels
         private string _errorMessage = "";
         private bool _hasError = false;
         private ObservableCollection<Tracker> _allTrackers = new ObservableCollection<Tracker>();
+        private ObservableCollection<Tracker> _recentTrackers = new ObservableCollection<Tracker>();
         private readonly ITrackerService _trackerService;
 
         /// <summary>
         /// Message to subscribe to for notification of tracker pull failure.
         /// </summary>
         public const string AllTrackersPullFailedMessage = "AllTrackersPullFailed";
+
+        /// <summary>
+        /// The number of <see cref="RecentTrackers"/> to pull.
+        /// </summary>
+        public const int RecentTrackerCount = 5;
 
         /// <summary>
         /// The <see cref="Tracker.Id"/> of the tracker we're working with.
@@ -77,6 +83,15 @@ namespace DayTrack.ViewModels
         }
 
         /// <summary>
+        /// Most recently logged to <see cref="Tracker"/>s from the database.
+        /// </summary>
+        public ObservableCollection<Tracker> RecentTrackers
+        {
+            get => _recentTrackers;
+            set => SetAndRaiseIfChanged(ref _recentTrackers, value);
+        }
+
+        /// <summary>
         /// Create and add a tracker to the database with the current <see cref="Name"/>.
         /// </summary>
         public ICommand CreateCommand { get; }
@@ -91,6 +106,11 @@ namespace DayTrack.ViewModels
         /// </summary>
         public ICommand DeleteCommand { get; }
 
+        /// <summary>
+        /// Populates <see cref="RecentTrackers"/>.
+        /// </summary>
+        public ICommand PullRecentCommand { get; }
+
         public TrackerViewModel(ITrackerService trackerService)
         {
             _trackerService = trackerService;
@@ -98,6 +118,7 @@ namespace DayTrack.ViewModels
             CreateCommand = new Command(async () => await CreateAsync());
             UpdateCommand = new Command(async () => await UpdateAsync());
             DeleteCommand = new Command(async tracker => await DeleteAsync((Tracker)tracker));
+            PullRecentCommand = new Command(async () => await PopulateRecentTrackersAsync());
             _ = PopulateAllTrackersAsync();
         }
 
@@ -176,6 +197,19 @@ namespace DayTrack.ViewModels
             }
 
             AllTrackers = new ObservableCollection<Tracker>(allTrackers);
+        }
+
+        internal async Task PopulateRecentTrackersAsync()
+        {
+            var recentTrackers = await _trackerService.TryGetRecentTrackersAsync(RecentTrackerCount);
+
+            if (recentTrackers == null)
+            {
+                MessagingCenter.Send(this, nameof(PullRecentCommand));
+                return;
+            }
+
+            RecentTrackers = new ObservableCollection<Tracker>(recentTrackers);
         }
 
         private void ResetAllValues()

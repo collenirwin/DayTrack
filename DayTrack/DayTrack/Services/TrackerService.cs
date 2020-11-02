@@ -54,6 +54,38 @@ namespace DayTrack.Services
             await Try.RunAsync(GetAllTrackersAsync,
                 ex => _logger.Error(ex, "Failed to get all trackers."));
 
+        private async Task<IEnumerable<Tracker>> GetRecentTrackersAsync(int count)
+        {
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
+            }
+
+            return await _context.QueryAsync<Tracker>(@"
+                SELECT
+                    Trackers.Id,
+                    Trackers.Name,
+                    Trackers.Created
+                FROM Trackers
+                    JOIN LoggedDays ON LoggedDays.TrackerId = Trackers.Id
+                GROUP BY
+                    Trackers.Id,
+                    Trackers.Name,
+                    Trackers.Created
+                ORDER BY LoggedDays.Date DESC
+                LIMIT ?
+                ", count);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Tracker"/>s that were most recently logged to.
+        /// </summary>
+        /// <param name="count">Number of trackers to pull.</param>
+        /// <returns>null if unsuccessful.</returns>
+        public async Task<IEnumerable<Tracker>> TryGetRecentTrackersAsync(int count) =>
+            await Try.RunAsync(async () => await GetRecentTrackersAsync(count),
+                ex => _logger.Error(ex, $"Failed to get top {count} recent trackers."));
+
         private async Task DeleteTrackerAsync(int id)
         {
             await _context.RunInTransactionAsync(connection =>
