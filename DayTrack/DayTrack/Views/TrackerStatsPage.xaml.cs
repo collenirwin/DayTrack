@@ -5,7 +5,6 @@ using SkiaSharp;
 using System;
 using System.Linq;
 using Xamarin.Forms;
-using Xamarin.Forms.Shapes;
 using Xamarin.Forms.Xaml;
 
 namespace DayTrack.Views

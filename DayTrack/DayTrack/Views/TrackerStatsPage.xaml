@@ -13,7 +13,7 @@
 
             <Label Text="Last two weeks" FontSize="Medium" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
             <microcharts:ChartView x:Name="ChartView" HeightRequest="200" Margin="10" />
-            
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

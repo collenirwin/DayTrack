@@ -1,8 +1,10 @@
 ﻿using DayTrack.Models;
 using DayTrack.Tests.Mocks;
 using DayTrack.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xunit;
@@ -262,7 +264,9 @@ namespace DayTrack.Tests
             await vm.PopulateStatsAsync();
 
             // assert
-            Assert.Null(vm.LoggedDayStats);
+            Assert.Equal(
+                JsonConvert.SerializeObject(new LoggedDayStats()),
+                JsonConvert.SerializeObject(vm.LoggedDayStats));
         }
 
         [Fact]

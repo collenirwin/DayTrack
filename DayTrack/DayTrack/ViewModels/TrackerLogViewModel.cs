@@ -192,10 +192,16 @@ namespace DayTrack.ViewModels
         {
             bool successful = await PopulateAllDaysAsync();
 
-            if (!successful || AllDayGroups is null || !AllDays.Any())
+            if (!successful || AllDayGroups is null)
             {
                 MessagingCenter.Send(this, DatabaseErrorMessage);
                 return false;
+            }
+
+            if (!AllDayGroups.Any())
+            {
+                LoggedDayStats = new LoggedDayStats();
+                return true;
             }
 
             var first = AllDays.Last().Date.Date;
