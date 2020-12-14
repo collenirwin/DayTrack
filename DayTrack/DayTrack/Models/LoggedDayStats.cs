@@ -28,6 +28,16 @@ namespace DayTrack.Models
         public int Median { get; set; }
 
         /// <summary>
+        /// The total number of log entries.
+        /// </summary>
+        public int Total { get; set; }
+
+        /// <summary>
+        /// The total number of days on which log entries were made.
+        /// </summary>
+        public int TotalDays { get; set; }
+
+        /// <summary>
         /// The date string of the first log entry.
         /// </summary>
         public string First { get; set; }

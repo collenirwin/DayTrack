@@ -13,7 +13,7 @@
 
             <Label Text="Last two weeks" FontSize="Medium" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
             <microcharts:ChartView x:Name="ChartView" HeightRequest="200" Margin="10" />
-
+            
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -21,6 +21,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -77,6 +79,25 @@
                 <StackLayout Grid.Row="4" Grid.Column="1" HorizontalOptions="Center">
                     <Label Text="Maximum" HorizontalTextAlignment="Center" />
                     <Label Text="{Binding LoggedDayStats.Max}"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Medium" />
+                </StackLayout>
+
+                <BoxView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                         Margin="10"
+                         HeightRequest="1"
+                         BackgroundColor="Silver" />
+
+                <StackLayout Grid.Row="6" Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="Total days" HorizontalTextAlignment="Center" />
+                    <Label Text="{Binding LoggedDayStats.TotalDays}"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Medium" />
+                </StackLayout>
+
+                <StackLayout Grid.Row="6" Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="Total logs" HorizontalTextAlignment="Center" />
+                    <Label Text="{Binding LoggedDayStats.Total}"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium" />
                 </StackLayout>

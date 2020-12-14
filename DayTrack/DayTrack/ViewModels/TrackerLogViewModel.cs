@@ -220,6 +220,8 @@ namespace DayTrack.ViewModels
                 Min = AllDayGroups.Min(group => group.Count),
                 Max = AllDayGroups.Max(group => group.Count),
                 Median = AllDayGroups[medianIndex].Count,
+                Total = AllDayGroups.Sum(group => group.Count),
+                TotalDays = AllDayGroups.Count,
                 First = first.ToString(SettingsViewModel.DateFormat),
                 Last = first.ToString(SettingsViewModel.DateFormat)
             };
