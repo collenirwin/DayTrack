@@ -223,7 +223,7 @@ namespace DayTrack.ViewModels
                 Total = AllDayGroups.Sum(group => group.Count),
                 TotalDays = AllDayGroups.Count,
                 First = first.ToString(SettingsViewModel.DateFormat),
-                Last = first.ToString(SettingsViewModel.DateFormat)
+                Last = last.ToString(SettingsViewModel.DateFormat)
             };
 
             return true;
