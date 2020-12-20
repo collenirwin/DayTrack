@@ -60,7 +60,7 @@ namespace DayTrack.ViewModels
             string path = Path.Combine(FileSystem.CacheDirectory, fileName);
 
             var dates = (await _logService.TryGetAllLoggedDaysAsync(SelectedTracker.Id))?
-                .Select(day => day.Date.ToShortDateString());
+                .Select(day => day.Date.ToString(DateFormats.ShortYearMonthDay));
 
             if (dates == null)
             {

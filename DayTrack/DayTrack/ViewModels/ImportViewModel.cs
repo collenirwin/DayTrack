@@ -4,6 +4,7 @@ using DayTrack.Utils;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -77,7 +78,8 @@ namespace DayTrack.ViewModels
                 var days = Encoding.UTF8.GetString(SelectedFile.DataArray)
                     .Trim()
                     .Split('\n')
-                    .Select(line => DateTime.Parse(line));
+                    .Select(line =>
+                        DateTime.ParseExact(line.Trim(), DateFormats.ShortYearMonthDay, CultureInfo.InvariantCulture));
 
                 bool successful = await _logService.TryBulkAddEntriesAsync(days, SelectedTracker.Id);
 
