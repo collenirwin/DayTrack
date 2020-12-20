@@ -4,7 +4,7 @@
   <style name="MainTheme" parent="MainTheme.Base">
   </style>
   <!-- Base theme applied no matter what API -->
-  <style name="MainTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+  <style name="MainTheme.Base" parent="Theme.AppCompat.DayNight">
     <!--If you are using revision 22.1 please use just windowNoTitle. Without android:-->
     <item name="windowNoTitle">true</item>
     <!--We will be using the toolbar so no need to show ActionBar-->
@@ -21,6 +21,7 @@
          colorControlHighlight and colorSwitchThumbNormal. -->
     <item name="windowActionModeOverlay">true</item>
 
+    <item name="android:navigationBarColor">#00796B</item>
     <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
     <item name="android:colorPressedHighlight">@color/ListViewSelected</item>
     <item name="android:colorFocusedHighlight">@color/ListViewSelected</item>
@@ -32,5 +33,5 @@
     <item name="colorAccent">#00BFA5</item>
   </style>
 
-  <color name="ListViewSelected">#EEEEEE</color>
+  <color name="ListViewSelected">#80CBC4</color>
 </resources>

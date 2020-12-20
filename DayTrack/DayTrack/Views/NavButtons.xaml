@@ -5,13 +5,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="DayTrack.Views.NavButtons">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style TargetType="ImageButton">
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="WidthRequest" Value="45" />
+                <Setter Property="BackgroundColor" Value="#98D5CF" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
     
     <ContentView.Content>
         <FlexLayout Direction="Row" AlignItems="Center" JustifyContent="Center">
-            <ImageButton Source="home.png" Padding="15" CornerRadius="20" Clicked="OnHomeClick" />
-            <ImageButton Source="plus.png" Padding="15" CornerRadius="20" Clicked="OnNewTrackerClick" />
-            <ImageButton Source="info.png" Padding="15" CornerRadius="20" Clicked="OnAboutClick" />
-            <ImageButton Source="cogwheel.png" Padding="15" CornerRadius="20" Clicked="OnSettingsClick" />
+            <ImageButton Source="home.png" Clicked="OnHomeClick" />
+            <ImageButton Source="plus.png" Clicked="OnNewTrackerClick" />
+            <ImageButton Source="info.png" Clicked="OnAboutClick" />
+            <ImageButton Source="cogwheel.png" Clicked="OnSettingsClick" />
         </FlexLayout>
     </ContentView.Content>
 </ContentView>
