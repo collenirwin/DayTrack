@@ -33,5 +33,5 @@
     <item name="colorAccent">#00BFA5</item>
   </style>
 
-  <color name="ListViewSelected">#80CBC4</color>
+  <color name="ListViewSelected">#00796B</color>
 </resources>
