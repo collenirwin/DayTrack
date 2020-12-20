@@ -79,7 +79,8 @@ namespace DayTrack.ViewModels
                     .Trim()
                     .Split('\n')
                     .Select(line =>
-                        DateTime.ParseExact(line.Trim(), DateFormats.ShortYearMonthDay, CultureInfo.InvariantCulture));
+                        DateTime.ParseExact(line.Trim(), DateFormats.ShortYearMonthDay, CultureInfo.InvariantCulture))
+                    .ToList();
 
                 bool successful = await _logService.TryBulkAddEntriesAsync(days, SelectedTracker.Id);
 
